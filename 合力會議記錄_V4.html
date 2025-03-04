@@ -843,57 +843,84 @@ function cleanupAfterPrint() {
             URL.revokeObjectURL(url);
         }
 
-        function exportMarkdown() {
-            collectFormData();
-            let mdContent = `# ${formData.meetingInfo.title || '會議紀錄'}\n\n`;
-            mdContent += `## 會議資訊\n`;
-            mdContent += `- **會議編號**：${formData.meetingInfo.number || ''}\n`;
-            mdContent += `- **日期時間**：${formData.meetingInfo.datetime || ''}\n`;
-            mdContent += `- **地點**：${formData.meetingInfo.location || ''}\n`;
-            mdContent += `- **會議類型**：${formData.meetingInfo.types.length > 0 ? formData.meetingInfo.types.join('、') : ''}\n\n`;
-            mdContent += `## 出席人員\n`;
-            mdContent += `- **主持人**：${document.getElementById('host').options[document.getElementById('host').selectedIndex]?.text || ''}\n`;
-            mdContent += `- **記錄者**：${document.getElementById('recorder').options[document.getElementById('recorder').selectedIndex]?.text || ''}\n\n`;
-            if (formData.participants.attendees.length > 0) {
-                mdContent += `| 單位 | 職稱 | 姓名 |\n|------|------|------|\n`;
-                formData.participants.attendees.forEach(attendee => {
-                    if (attendee.name) mdContent += `| ${attendee.unit || ''} | ${attendee.title || ''} | ${attendee.name || ''} |\n`;
-                });
-                mdContent += `\n`;
+ function exportMarkdown() {
+    collectFormData(); // 確保資料是最新的
+    let mdContent = `# ${formData.meetingInfo.title || '會議紀錄'}\n\n`;
+
+    // 會議資訊
+    mdContent += `## 會議資訊\n`;
+    mdContent += `- **會議編號**：${formData.meetingInfo.number || ''}\n`;
+    mdContent += `- **日期時間**：${formData.meetingInfo.datetime || ''}\n`;
+    mdContent += `- **地點**：${formData.meetingInfo.location || ''}\n`;
+    mdContent += `- **會議類型**：${formData.meetingInfo.types.length > 0 ? formData.meetingInfo.types.join('、') : '無'}\n\n`;
+
+    // 出席人員
+    mdContent += `## 出席人員\n`;
+    mdContent += `- **主持人**：${document.getElementById('host').options[document.getElementById('host').selectedIndex]?.text || ''}\n`;
+    mdContent += `- **記錄者**：${document.getElementById('recorder').options[document.getElementById('recorder').selectedIndex]?.text || ''}\n\n`;
+    if (formData.participants.attendees.length > 0) {
+        mdContent += `| 單位          | 職稱          | 姓名         |\n`;
+        mdContent += `|---------------|---------------|--------------|\n`;
+        formData.participants.attendees.forEach(attendee => {
+            if (attendee.name) {
+                const unit = attendee.unit || '';
+                const title = attendee.title || '';
+                const name = attendee.name || '';
+                mdContent += `| ${unit.replace(/\|/g, '\\|')} | ${title.replace(/\|/g, '\\|')} | ${name.replace(/\|/g, '\\|')} |\n`;
             }
-            mdContent += `## 前次追蹤事項\n`;
-            if (formData.previousItems.length > 0) {
-                mdContent += `| 項目 | 負責人 | 狀態 | 說明 |\n|------|--------|------|------|\n`;
-                formData.previousItems.forEach(item => {
-                    if (item.item) {
-                        const responsibleText = document.querySelector(`#previous-items select[value="${item.responsible}"]`)?.selectedOptions[0]?.text || item.responsible;
-                        mdContent += `| ${item.item || ''} | ${responsibleText || ''} | ${item.status || ''} | ${item.description || ''} |\n`;
-                    }
-                });
-                mdContent += `\n`;
+        });
+        mdContent += `\n`;
+    }
+
+    // 前次追蹤事項
+    mdContent += `## 前次追蹤事項\n`;
+    if (formData.previousItems.length > 0) {
+        mdContent += `| 項目          | 負責人         | 狀態    | 說明          |\n`;
+        mdContent += `|---------------|----------------|---------|---------------|\n`;
+        formData.previousItems.forEach(item => {
+            if (item.item) {
+                const responsibleText = document.querySelector(`#previous-items select[value="${item.responsible}"]`)?.selectedOptions[0]?.text || item.responsible || '不指定';
+                const itemText = item.item.replace(/\|/g, '\\|').replace(/\n/g, '<br>'); // 處理特殊字元
+                const descText = item.description.replace(/\|/g, '\\|').replace(/\n/g, '<br>');
+                mdContent += `| ${itemText} | ${responsibleText.replace(/\|/g, '\\|')} | ${item.status || ''} | ${descText} |\n`;
             }
-            mdContent += `## 本次討論事項\n`;
-            if (formData.discussionItems.length > 0) {
-                mdContent += `| 主題 | 討論內容 | 結論 | 負責人 | 期限 |\n|------|----------|------|--------|------|\n`;
-                formData.discussionItems.forEach(item => {
-                    if (item.topic) {
-                        const responsibleText = document.querySelector(`#discussion-items select[value="${item.responsible}"]`)?.selectedOptions[0]?.text || item.responsible;
-                        mdContent += `| ${item.topic || ''} | ${item.content || ''} | ${item.conclusion || ''} | ${responsibleText || ''} | ${item.deadline || ''} |\n`;
-                    }
-                });
+        });
+        mdContent += `\n`;
+    } else {
+        mdContent += `無前次追蹤事項。\n\n`;
+    }
+
+    // 本次討論事項
+    mdContent += `## 本次討論事項\n`;
+    if (formData.discussionItems.length > 0) {
+        mdContent += `| 主題          | 討論內容       | 結論          | 負責人         | 期限         |\n`;
+        mdContent += `|---------------|----------------|---------------|----------------|--------------|\n`;
+        formData.discussionItems.forEach(item => {
+            if (item.topic) {
+                const responsibleText = document.querySelector(`#discussion-items select[value="${item.responsible}"]`)?.selectedOptions[0]?.text || item.responsible || '不指定';
+                const topicText = item.topic.replace(/\|/g, '\\|').replace(/\n/g, '<br>');
+                const contentText = item.content.replace(/\|/g, '\\|').replace(/\n/g, '<br>');
+                const conclusionText = item.conclusion.replace(/\|/g, '\\|').replace(/\n/g, '<br>');
+                mdContent += `| ${topicText} | ${contentText} | ${conclusionText} | ${responsibleText.replace(/\|/g, '\\|')} | ${item.deadline || ''} |\n`;
             }
-            const meetingNumber = formData.meetingInfo.number || 'meeting';
-            const date = new Date().toISOString().split('T')[0];
-            const blob = new Blob([mdContent], { type: 'text/markdown' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `${meetingNumber}_${date}.md`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }
+        });
+    } else {
+        mdContent += `無本次討論事項。\n`;
+    }
+
+    // 匯出檔案
+    const meetingNumber = formData.meetingInfo.number || 'meeting';
+    const date = new Date().toISOString().split('T')[0];
+    const blob = new Blob([mdContent], { type: 'text/markdown' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${meetingNumber}_${date}.md`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
 
         function importJSON(input) {
             const file = input.files[0];
