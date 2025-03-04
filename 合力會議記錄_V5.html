@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>專案會議紀錄</title>
+    <script src="https://unpkg.com/html-docx-js@0.3.1/dist/html-docx.js"></script>
+    <script>var htmlDocx = window.htmlDocx || {};</script>
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --danger-color: #f44336;
+            --info-color: #2196F3;
+            --border-color: #ddd;
+            --bg-color: #f5f5f5;
+            --spacing-unit: 4px;
+            --form-element-height: 32px;
+        }
+        body {
+            font-family: "Noto Sans TC", sans-serif;
+            font-size: 10pt;
+            line-height: 1.4;
+            margin: 0;
+            padding: 20px 15mm;
+        }
+        .section {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+        }
+        .section-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 10px;
+        }
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: var(--spacing-unit);
+        }
+        th {
+            background-color: var(--bg-color);
+            font-weight: normal;
+        }
+        .form-control {
+            width: 95%;
+            padding: var(--spacing-unit);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            height: var(--form-element-height);
+            box-sizing: border-box;
+        }
+        textarea.form-control {
+            height: auto;
+            resize: vertical;
+        }
+        .required::after {
+            content: "*";
+            color: var(--danger-color);
+            margin-left: 4px;
+        }
+        .btn {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 9pt;
+            color: white;
+            transition: opacity 0.2s;
+        }
+        .btn:hover { opacity: 0.9; }
+        .btn-primary { background-color: var(--primary-color); }
+        .btn-danger { background-color: var(--danger-color); }
+        .btn-info { background-color: var(--info-color); }
+        .alert {
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+            display: none;
+        }
+        .alert-danger {
+            background-color: #ffebee;
+            color: var(--danger-color);
+            border: 1px solid var(--danger-color);
+        }
+        .info-table {
+            width: 100%;
+            border: none !important;
+            margin-bottom: 6px;
+        }
+        .info-table td {
+            border: none !important;
+            padding: 2px 6px !important;
+            vertical-align: middle !important;
+        }
+        .datetime-picker {
+            display: none;
+        }
+        tr.draggable {
+            cursor: move;
+        }
+        tr.draggable.dragover {
+            background-color: #e0f7fa;
+        }
+        .meeting-number-group {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+        .meeting-number-group input {
+            width: auto;
+            padding: 2px;
+            font-size: 10pt;
+        }
+        #project-code { width: 60px; }
+        #meeting-date-input { width: 80px; }
+        #department { width: 40px; }
+        #version { width: 40px; }
+    </style>
+</head>
+	
+	<body>
+    <div id="validation-alert" class="alert alert-danger"></div>
+    <div class="button-group" style="margin-bottom: 20px;">
+        <div style="display: inline-block;">
+            <button onclick="handlePrint()" class="btn btn-info" title="列印會議紀錄 (Ctrl+P)">列印</button>
+            <button onclick="exportJSON()" class="btn btn-primary" title="匯出為 JSON 格式">匯出JSON</button>
+            <button onclick="exportMarkdown()" class="btn btn-primary" title="匯出為 Markdown 格式">匯出MD</button>
+            <button onclick="exportWord()" class="btn btn-primary" title="匯出為 Word 文件">匯出Word</button>
+            <input type="file" id="importJSON" style="display: none" accept=".json" onchange="importJSON(this)">
+            <button onclick="document.getElementById('importJSON').click()" class="btn btn-info" title="匯入先前保存的 JSON">匯入JSON</button>
+        </div>
+        <div style="display: inline-block; float: right;">
+            <button onclick="clearForm()" class="btn btn-danger" title="清除所有資料">清除表單</button>
+        </div>
+    </div>
+
+    <div class="section">
+        <h1><input type="text" class="form-control" id="meeting-title" value="會議紀錄" style="text-align: center; font-size: 14pt; font-weight: bold; width: 100%; border: none; background: transparent;" required></h1>
+        <table class="info-table">
+            <tr>
+                <td style="width: 40%">
+                    <label class="required">會議編號：</label>
+                    <div class="meeting-number-group">
+                        <span>MM-</span>
+                        <input type="text" class="form-control" id="project-code" maxlength="6" placeholder="案號" required>
+                        <span>-</span>
+                        <input type="text" class="form-control" id="meeting-date-input" maxlength="8" placeholder="日期" required>
+                        <span>-</span>
+                        <input type="text" class="form-control" id="department" maxlength="2" placeholder="部門" required>
+                        <span>-</span>
+                        <input type="text" class="form-control" id="version" maxlength="2" placeholder="版次" required>
+                    </div>
+                </td>
+                <td style="width: 20%">
+                    <label class="required">日期時間：</label>
+                    <input type="text" id="datetime-display" class="form-control" readonly style="width: 150px;" required>
+                    <div class="datetime-picker">
+                        <input type="date" id="meeting-date" class="form-control">
+                        <input type="time" id="meeting-time" class="form-control" step="300">
+                    </div>
+                </td>
+                <td style="width: 40%">
+                    <label class="required">地點：</label>
+                    <input type="text" class="form-control" id="meeting-location" required>
+                </td>
+            </tr>
+        </table>
+    </div>
+		
+        <div class="meeting-type" style="margin-top: 10px;">
+            <label class="required">會議類型：</label>
+            <label><input type="checkbox" name="meeting-type"> 一般會議</label>
+            <label><input type="checkbox" name="meeting-type"> 農業申請</label>
+            <label><input type="checkbox" name="meeting-type"> 建築設計</label>
+            <label><input type="checkbox" name="meeting-type"> 室內設計</label>
+            <label><input type="checkbox" name="meeting-type"> 其他顧問</label>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">出席人員</div>
+        <table>
+            <tr>
+                <th style="width: 15%"><label class="required">主持人</label></th>
+                <td><select id="host" class="form-control" required><option value="">請選擇...</option></select></td>
+                <th style="width: 15%"><label class="required">記錄者</label></th>
+                <td><select id="recorder" class="form-control" required><option value="">請選擇...</option></select></td>
+            </tr>
+        </table>
+        <table id="attendee-list">
+            <thead>
+                <tr>
+                    <th style="width: 50%">單位</th>
+                    <th style="width: 20%">職稱</th>
+                    <th>姓名</th>
+                    <th style="width: 60px">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="draggable" draggable="true">
+                    <td><input type="text" class="form-control unit-input" list="unit-suggestions" placeholder="選擇或輸入單位"></td>
+                    <td><input type="text" class="form-control title-input" list="title-suggestions" placeholder="輸入職稱"></td>
+                    <td><input type="text" class="form-control"></td>
+                    <td><button class="btn btn-danger">刪除</button></td>
+                </tr>
+            </tbody>
+        </table>
+        <datalist id="unit-suggestions">
+            <option>業主方</option>
+            <option>建築師事務所</option>
+            <option>現現設計</option>
+            <option>一抹青顧問</option>
+            <option>其他</option>
+        </datalist>
+        <datalist id="title-suggestions">
+            <option>經理</option>
+			<option>總經理</option>
+            <option>專案經理</option>
+            <option>建築師</option>
+            <option>設計師</option>
+            <option>工程師</option>
+        </datalist>
+        <button class="btn btn-primary" onclick="addAttendeeRow()">新增出席者</button>
+    </div>
+	
+	    <div class="section">
+        <div class="section-title">前次追蹤事項</div>
+        <table id="previous-items">
+            <thead>
+                <tr>
+                    <th style="width: 30%">項目</th>
+                    <th>負責人</th>
+                    <th style="width: 12%">狀態</th>
+                    <th style="width: 30%">說明</th>
+                    <th style="width: 60px">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="draggable" draggable="true">
+                    <td><textarea class="form-control" rows="2"></textarea></td>
+                    <td><select class="form-control responsible-person"><option value="">請選擇...</option><option value="none">不指定</option></select></td>
+                    <td><select class="form-control"><option>已完成</option><option>進行中</option><option>待辦</option></select></td>
+                    <td><textarea class="form-control" rows="2"></textarea></td>
+                    <td><button class="btn btn-danger">刪除</button></td>
+                </tr>
+            </tbody>
+        </table>
+        <button class="btn btn-primary" onclick="addRow('previous-items')">新增追蹤事項</button>
+        <input type="file" id="importPreviousJSON" style="display: none" accept=".json" onchange="importPreviousItems(this)">
+        <button class="btn btn-info" onclick="document.getElementById('importPreviousJSON').click()">從前次匯入</button>
+    </div>
+    <div class="section">
+        <div class="section-title">本次討論事項</div>
+        <table id="discussion-items">
+            <thead>
+                <tr>
+                    <th style="width: 15%">主題</th>
+                    <th style="width: 30%">討論內容</th>
+                    <th style="width: 30%">結論</th>
+                    <th style="width: 15%">負責人</th>
+                    <th>期限</th>
+                    <th style="width: 60px">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="draggable" draggable="true">
+                    <td><textarea class="form-control" rows="2"></textarea></td>
+                    <td><textarea class="form-control" rows="3"></textarea></td>
+                    <td><textarea class="form-control" rows="2"></textarea></td>
+                    <td><select class="form-control responsible-person"><option value="">請選擇...</option><option value="none">不指定</option></select></td>
+                    <td><input type="date" class="form-control"></td>
+                    <td><button class="btn btn-danger">刪除</button></td>
+                </tr>
+            </tbody>
+        </table>
+        <button class="btn btn-primary" onclick="addRow('discussion-items')">新增討論事項</button>
+    </div>
+
+</body>
+</html>	
+
+    <script>
+        let formData = {
+            meetingInfo: { 
+                title: '會議紀錄', 
+                number: '', 
+                datetime: '', 
+                location: '', 
+                types: [], 
+                projectCode: '', 
+                date: '', 
+                department: '', 
+                version: '' 
+            },
+            participants: { 
+                host: '', 
+                recorder: '', 
+                attendees: [] 
+            },
+            previousItems: [],
+            discussionItems: []
+        };
+        let draggedRow = null;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadFromLocalStorage();
+            initMeetingNumber();
+            initDateTime();
+            populateFormData();
+            setupEventListeners();
+            setupFormValidation();
+            updateResponsiblePersonOptions();
+            setupDragAndDrop();
+        });
+
+        function loadFromLocalStorage() {
+            const savedData = localStorage.getItem('meetingFormData');
+            if (savedData) {
+                formData = JSON.parse(savedData);
+                populateFormData();
+            }
+        }
+
+        function saveFormData() {
+            collectFormData();
+            localStorage.setItem('meetingFormData', JSON.stringify(formData));
+        }
+		
+        function initMeetingNumber() {
+            const projectCodeInput = document.getElementById('project-code');
+            const dateInput = document.getElementById('meeting-date-input');
+            const departmentInput = document.getElementById('department');
+            const versionInput = document.getElementById('version');
+
+            const savedData = JSON.parse(localStorage.getItem('meetingFormData') || '{}');
+            if (savedData.meetingInfo && savedData.meetingInfo.number) {
+                const [_, projectCode, date, department, version] = savedData.meetingInfo.number.split('-');
+                projectCodeInput.value = projectCode || '113E06';
+                dateInput.value = date || '20250303';
+                departmentInput.value = department || 'NN';
+                versionInput.value = version || '01';
+            } else {
+                projectCodeInput.value = '113E06';
+                dateInput.value = '20250303';
+                departmentInput.value = 'NN';
+                let version = parseInt(localStorage.getItem('meetingVersion') || 0) + 1;
+                versionInput.value = String(version).padStart(2, '0');
+                localStorage.setItem('meetingVersion', version);
+            }
+
+            [projectCodeInput, dateInput, departmentInput, versionInput].forEach(input => {
+                input.addEventListener('input', updateMeetingNumber);
+            });
+        }
+
+        function updateMeetingNumber() {
+            const projectCode = document.getElementById('project-code').value.padEnd(6, ' ');
+            const date = document.getElementById('meeting-date-input').value.padEnd(8, ' ');
+            const department = document.getElementById('department').value.padEnd(2, ' ');
+            const version = document.getElementById('version').value.padEnd(2, ' ');
+            formData.meetingInfo.number = `MM-${projectCode}-${date}-${department}-${version}`.replace(/\s/g, '');
+            saveFormData();
+        }
+
+        function initDateTime() {
+            const now = new Date();
+            const dateInput = document.getElementById('meeting-date');
+            const timeInput = document.getElementById('meeting-time');
+            const displayInput = document.getElementById('datetime-display');
+            const picker = document.querySelector('.datetime-picker');
+            dateInput.value = now.toISOString().split('T')[0];
+            timeInput.value = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+            updateDateTimeDisplay();
+            displayInput.addEventListener('click', () => picker.style.display = 'block');
+            [dateInput, timeInput].forEach(input => {
+                input.addEventListener('change', () => {
+                    updateDateTimeDisplay();
+                    picker.style.display = 'none';
+                });
+            });
+            document.addEventListener('click', (e) => {
+                if (!displayInput.contains(e.target) && !picker.contains(e.target)) {
+                    picker.style.display = 'none';
+                }
+            });
+        }
+
+        function updateDateTimeDisplay() {
+            const dateInput = document.getElementById('meeting-date');
+            const timeInput = document.getElementById('meeting-time');
+            const displayInput = document.getElementById('datetime-display');
+            if (dateInput.value && timeInput.value) {
+                const date = new Date(`${dateInput.value}T${timeInput.value}`);
+                displayInput.value = new Intl.DateTimeFormat('zh-TW', {
+                    year: 'numeric', month: '2-digit', day: '2-digit',
+                    hour: '2-digit', minute: '2-digit', hour12: false
+                }).format(date);
+            }
+        }
+		
+        function updateResponsiblePersonOptions() {
+            const attendees = Array.from(document.querySelectorAll('#attendee-list tbody tr'))
+                .map(row => {
+                    const unit = row.querySelector('.unit-input').value;
+                    const title = row.querySelector('.title-input').value;
+                    const name = row.cells[2].querySelector('input').value;
+                    return name ? `${name}(${unit}-${title})` : null;
+                }).filter(Boolean);
+            document.querySelectorAll('.responsible-person, #host, #recorder').forEach(select => {
+                const currentValue = select.value;
+                select.innerHTML = '<option value="">請選擇...</option><option value="none">不指定</option>';
+                attendees.forEach(person => select.innerHTML += `<option value="${person}">${person}</option>`);
+                if (currentValue && currentValue !== 'none' && !attendees.includes(currentValue)) {
+                    select.innerHTML += `<option value="${currentValue}">${currentValue}</option>`;
+                }
+                select.value = currentValue;
+            });
+        }
+
+        function addAttendeeRow() {
+            const table = document.getElementById('attendee-list').getElementsByTagName('tbody')[0];
+            const newRow = table.insertRow(-1);
+            newRow.className = 'draggable';
+            newRow.draggable = true;
+            newRow.innerHTML = `
+                <td><input type="text" class="form-control unit-input" list="unit-suggestions" placeholder="選擇或輸入單位"></td>
+                <td><input type="text" class="form-control title-input" list="title-suggestions" placeholder="輸入職稱"></td>
+                <td><input type="text" class="form-control"></td>
+                <td><button class="btn btn-danger">刪除</button></td>
+            `;
+            newRow.querySelectorAll('input').forEach(input => {
+                input.addEventListener('change', () => {
+                    updateResponsiblePersonOptions();
+                    saveFormData();
+                });
+            });
+        }
+
+        function addRow(tableId) {
+            const table = document.getElementById(tableId).getElementsByTagName('tbody')[0];
+            const newRow = table.insertRow(-1);
+            newRow.className = 'draggable';
+            newRow.draggable = true;
+            const template = table.rows[0];
+            for (let i = 0; i < template.cells.length; i++) {
+                const newCell = newRow.insertCell(i);
+                newCell.innerHTML = template.cells[i].innerHTML;
+            }
+            newRow.querySelectorAll('input, select, textarea').forEach(input => {
+                if (input.type !== 'button') input.value = '';
+                input.addEventListener('change', () => {
+                    saveFormData();
+                    updateResponsiblePersonOptions();
+                });
+            });
+        }
+		
+        function importPreviousItems(input) {
+            const file = input.files[0];
+            if (!file) {
+                alert('未選擇任何檔案，請選擇一個 JSON 檔案！');
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const rawData = e.target.result.trim();
+                console.log('原始檔案內容:', rawData);
+                try {
+                    const previousData = JSON.parse(rawData);
+                    console.log('解析後的 JSON 數據:', previousData);
+                    if (!previousData.previousItems || !Array.isArray(previousData.previousItems)) {
+                        alert('選取的 JSON 檔案無有效的前次追蹤事項（previousItems 字段缺失或格式錯誤）！');
+                        return;
+                    }
+                    const unfinishedItems = previousData.previousItems.filter(item => item.status !== '已完成');
+                    if (unfinishedItems.length === 0) {
+                        alert('選取的 JSON 檔案中所有事項已完成，無需匯入！');
+                        return;
+                    }
+                    const table = document.getElementById('previous-items').getElementsByTagName('tbody')[0];
+                    while (table.rows.length > 1) table.deleteRow(1);
+                    unfinishedItems.forEach(item => {
+                        addRow('previous-items');
+                        const row = table.rows[table.rows.length - 1];
+                        row.cells[0].querySelector('textarea').value = item.item || '';
+                        row.cells[1].querySelector('select').value = item.responsible || 'none';
+                        row.cells[2].querySelector('select').value = item.status || '待辦';
+                        row.cells[3].querySelector('textarea').value = item.description || '';
+                    });
+                    updateResponsiblePersonOptions();
+                    saveFormData();
+                    alert(`成功從 JSON 匯入 ${unfinishedItems.length} 項未完成事項！`);
+                } catch (error) {
+                    alert('檔案解析失敗，請確認檔案是否為有效的 JSON 格式！');
+                    console.error('解析錯誤詳情:', error);
+                    console.log('嘗試解析的內容:', rawData);
+                }
+            };
+            reader.onerror = function() {
+                alert('無法讀取檔案，請確認檔案是否存在且可訪問！');
+            };
+            reader.readAsText(file, 'UTF-8');
+            input.value = '';
+        }
+
+        function setupEventListeners() {
+            document.querySelectorAll('input, select, textarea').forEach(element => {
+                element.addEventListener('change', saveFormData);
+            });
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('btn-danger')) {
+                    if (confirm('確定要刪除這筆記錄嗎？')) {
+                        const row = e.target.closest('tr');
+                        const table = row.parentElement;
+                        if (table.rows.length > 1) {
+                            row.remove();
+                            updateResponsiblePersonOptions();
+                            saveFormData();
+                        }
+                    }
+                }
+            });
+            document.addEventListener('keydown', (e) => {
+                if (e.ctrlKey && e.key === 'p') {
+                    e.preventDefault();
+                    handlePrint();
+                }
+            });
+        }
+
+        function setupDragAndDrop() {
+            const tables = ['attendee-list', 'previous-items', 'discussion-items'];
+            tables.forEach(tableId => {
+                const tbody = document.getElementById(tableId).getElementsByTagName('tbody')[0];
+                tbody.addEventListener('dragstart', (e) => {
+                    const row = e.target.closest('tr');
+                    if (row && row.classList.contains('draggable')) {
+                        draggedRow = row;
+                        e.dataTransfer.setData('text/plain', 'drag');
+                    }
+                });
+                tbody.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    const targetRow = e.target.closest('tr');
+                    if (targetRow && targetRow.classList.contains('draggable')) {
+                        targetRow.classList.add('dragover');
+                    }
+                });
+                tbody.addEventListener('dragleave', (e) => {
+                    const targetRow = e.target.closest('tr');
+                    if (targetRow && targetRow.classList.contains('draggable')) {
+                        targetRow.classList.remove('dragover');
+                    }
+                });
+                tbody.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    const targetRow = e.target.closest('tr');
+                    if (targetRow && targetRow.classList.contains('draggable') && draggedRow && draggedRow !== targetRow) {
+                        const allRows = Array.from(tbody.rows);
+                        const fromIndex = allRows.indexOf(draggedRow);
+                        const toIndex = allRows.indexOf(targetRow);
+                        if (fromIndex < toIndex) {
+                            targetRow.parentNode.insertBefore(draggedRow, targetRow.nextSibling);
+                        } else {
+                            targetRow.parentNode.insertBefore(draggedRow, targetRow);
+                        }
+                        draggedRow = null;
+                        targetRow.classList.remove('dragover');
+                        saveFormData();
+                    }
+                });
+                tbody.addEventListener('dragend', () => {
+                    draggedRow = null;
+                    Array.from(tbody.rows).forEach(row => row.classList.remove('dragover'));
+                });
+            });
+        }
+		
+        function setupFormValidation() {
+            const requiredFields = document.querySelectorAll('[required]');
+            const alertDiv = document.getElementById('validation-alert');
+            requiredFields.forEach(field => {
+                field.addEventListener('invalid', (e) => {
+                    e.preventDefault();
+                    const label = field.previousElementSibling?.textContent || '欄位';
+                    alertDiv.style.display = 'block';
+                    alertDiv.textContent = `請填寫必要欄位：${label.replace('：', '')}`;
+                });
+                field.addEventListener('input', () => {
+                    if (field.validity.valid) alertDiv.style.display = 'none';
+                });
+            });
+        }
+
+        function validateForm() {
+            const alertDiv = document.getElementById('validation-alert');
+            let isValid = true;
+            document.querySelectorAll('[required]').forEach(field => {
+                if (!field.value) {
+                    isValid = false;
+                    const label = field.previousElementSibling?.textContent || '欄位';
+                    alertDiv.style.display = 'block';
+                    alertDiv.textContent = `請填寫必要欄位：${label.replace('：', '')}`;
+                    field.focus();
+                }
+            });
+            if (document.querySelectorAll('[name="meeting-type"]:checked').length === 0) {
+                isValid = false;
+                alertDiv.style.display = 'block';
+                alertDiv.textContent = '請至少選擇一個會議類型';
+            }
+            if (document.querySelectorAll('#attendee-list tbody tr').length < 1) {
+                isValid = false;
+                alertDiv.style.display = 'block';
+                alertDiv.textContent = '請至少添加一位出席者';
+            }
+            return isValid;
+        }
+
+        function handlePrint() {
+            if (validateForm()) {
+                prepareForPrint();
+                window.print();
+                cleanupAfterPrint();
+            }
+        }
+
+        function prepareForPrint() {
+    // 隱藏所有按鈕和不必要的元素
+    document.querySelectorAll('.btn, .button-group, #validation-alert, .datetime-picker, input[type="file"]').forEach(el => {
+        el.style.display = 'none';
+    });
+
+    // 將輸入框和選擇框替換為純文字，並移除框線和背景樣式
+    document.querySelectorAll('input[type="text"], input[type="date"], textarea.form-control, select').forEach(input => {
+        if (input.tagName === 'SELECT') {
+            const displayDiv = document.createElement('div');
+            displayDiv.className = 'print-text';
+            displayDiv.textContent = input.options[input.selectedIndex]?.text || '';
+            displayDiv.style.cssText = 'border: none; background: transparent; padding: 8px; white-space: pre-wrap;';
+            input.parentNode.insertBefore(displayDiv, input);
+            input.style.display = 'none';
+        } else {
+            const displayDiv = document.createElement('div');
+            displayDiv.className = 'print-text';
+            displayDiv.textContent = input.value || '';
+            displayDiv.style.cssText = 'border: none; background: transparent; padding: 8px; white-space: pre-wrap;';
+            input.parentNode.insertBefore(displayDiv, input);
+            input.style.display = 'none';
+        }
+    });
+
+    // 調整表格樣式，確保列印時乾淨
+    document.querySelectorAll('table, th, td').forEach(el => {
+        el.style.border = '1px solid black';
+        el.style.backgroundColor = el.tagName === 'TH' ? '#f5f5f5' : 'transparent';
+    });
+
+    // 移除操作欄（刪除按鈕所在的欄位）
+    document.querySelectorAll('td:last-child').forEach(cell => {
+        if (cell.querySelector('.btn-danger')) {
+            cell.style.display = 'none';
+        }
+    });
+    document.querySelectorAll('th:last-child').forEach(th => {
+        if (th.textContent === '操作') {
+            th.style.display = 'none';
+        }
+    });
+
+    // 移除區塊的最外框
+    document.querySelectorAll('.section').forEach(section => {
+        section.style.border = 'none';
+        section.style.padding = '0'; // 移除內距，讓內容更緊湊
+    });
+}
+
+function cleanupAfterPrint() {
+    // 恢復隱藏的元素
+    document.querySelectorAll('.btn, .button-group, #validation-alert, .datetime-picker, input[type="file"]').forEach(el => {
+        el.style.display = '';
+    });
+
+    // 移除列印時新增的文字並恢復原始輸入框
+    document.querySelectorAll('.print-text').forEach(el => el.remove());
+    document.querySelectorAll('input[type="text"], input[type="date"], textarea.form-control, select').forEach(input => {
+        input.style.display = '';
+    });
+
+    // 恢復操作欄
+    document.querySelectorAll('td:last-child').forEach(cell => {
+        if (cell.querySelector('.btn-danger')) {
+            cell.style.display = '';
+        }
+    });
+    document.querySelectorAll('th:last-child').forEach(th => {
+        if (th.textContent === '操作') {
+            th.style.display = '';
+        }
+    });
+
+    // 恢復區塊的邊框和內距
+    document.querySelectorAll('.section').forEach(section => {
+        section.style.border = '1px solid var(--border-color)';
+        section.style.padding = '15px';
+    });
+}
+
+        function clearForm() {
+            if (confirm('確定要清除所有資料嗎？此操作無法復原。')) {
+                localStorage.removeItem('meetingFormData');
+                const version = parseInt(localStorage.getItem('meetingVersion') || 0) + 1;
+                formData = {
+                    meetingInfo: {
+                        title: '會議紀錄',
+                        number: `MM-${document.getElementById('project-code').value || '113E06'}-${document.getElementById('meeting-date-input').value || '20250303'}-${document.getElementById('department').value || 'NN'}-${String(version).padStart(2, '0')}`,
+                        datetime: '',
+                        location: '',
+                        types: [],
+                        projectCode: document.getElementById('project-code').value || '113E06',
+                        date: document.getElementById('meeting-date-input').value || '20250303',
+                        department: document.getElementById('department').value || 'NN',
+                        version: String(version).padStart(2, '0')
+                    },
+                    participants: { host: '', recorder: '', attendees: [] },
+                    previousItems: [],
+                    discussionItems: []
+                };
+                localStorage.setItem('meetingVersion', version);
+                populateFormData();
+                initDateTime();
+            }
+        }
+
+        function collectFormData() {
+            formData.meetingInfo = {
+                title: document.getElementById('meeting-title').value,
+                number: `MM-${document.getElementById('project-code').value}-${document.getElementById('meeting-date-input').value}-${document.getElementById('department').value}-${document.getElementById('version').value}`,
+                datetime: document.getElementById('datetime-display').value,
+                location: document.getElementById('meeting-location').value,
+                types: Array.from(document.querySelectorAll('[name="meeting-type"]:checked')).map(cb => cb.nextSibling.textContent.trim()),
+                projectCode: document.getElementById('project-code').value,
+                date: document.getElementById('meeting-date-input').value,
+                department: document.getElementById('department').value,
+                version: document.getElementById('version').value
+            };
+            formData.participants = {
+                host: document.getElementById('host').value,
+                recorder: document.getElementById('recorder').value,
+                attendees: Array.from(document.querySelectorAll('#attendee-list tbody tr')).map(row => ({
+                    unit: row.querySelector('.unit-input').value || '',
+                    title: row.querySelector('.title-input').value || '',
+                    name: row.cells[2].querySelector('input').value || ''
+                }))
+            };
+            formData.previousItems = Array.from(document.querySelectorAll('#previous-items tbody tr')).map(row => ({
+                item: row.cells[0].querySelector('textarea').value || '',
+                responsible: row.cells[1].querySelector('select').value || 'none',
+                status: row.cells[2].querySelector('select').value || '待辦',
+                description: row.cells[3].querySelector('textarea').value || ''
+            }));
+            formData.discussionItems = Array.from(document.querySelectorAll('#discussion-items tbody tr')).map(row => ({
+                topic: row.cells[0].querySelector('textarea').value || '',
+                content: row.cells[1].querySelector('textarea').value || '',
+                conclusion: row.cells[2].querySelector('textarea').value || '',
+                responsible: row.cells[3].querySelector('select').value || 'none',
+                deadline: row.cells[4].querySelector('input').value || ''
+            }));
+        }
+
+        function populateFormData() {
+            if (!formData) return;
+            document.getElementById('meeting-title').value = formData.meetingInfo.title;
+            document.getElementById('project-code').value = formData.meetingInfo.projectCode || '113E06';
+            document.getElementById('meeting-date-input').value = formData.meetingInfo.date || '20250303';
+            document.getElementById('department').value = formData.meetingInfo.department || 'NN';
+            document.getElementById('version').value = formData.meetingInfo.version || '01';
+            document.getElementById('datetime-display').value = formData.meetingInfo.datetime;
+            document.getElementById('meeting-location').value = formData.meetingInfo.location;
+            document.querySelectorAll('[name="meeting-type"]').forEach(cb => {
+                cb.checked = formData.meetingInfo.types.includes(cb.nextSibling.textContent.trim());
+            });
+            if (formData.participants) {
+                document.getElementById('host').value = formData.participants.host;
+                document.getElementById('recorder').value = formData.participants.recorder;
+                const attendeeTable = document.getElementById('attendee-list').getElementsByTagName('tbody')[0];
+                while (attendeeTable.rows.length > 1) attendeeTable.deleteRow(1);
+                formData.participants.attendees.forEach((attendee, index) => {
+                    if (index > 0) addAttendeeRow();
+                    const row = attendeeTable.rows[index];
+                    row.querySelector('.unit-input').value = attendee.unit;
+                    row.querySelector('.title-input').value = attendee.title;
+                    row.cells[2].querySelector('input').value = attendee.name;
+                });
+            }
+            if (formData.previousItems) {
+                const previousTable = document.getElementById('previous-items').getElementsByTagName('tbody')[0];
+                while (previousTable.rows.length > 1) previousTable.deleteRow(1);
+                formData.previousItems.forEach((item, index) => {
+                    if (index > 0) addRow('previous-items');
+                    const row = previousTable.rows[index];
+                    row.cells[0].querySelector('textarea').value = item.item;
+                    row.cells[1].querySelector('select').value = item.responsible;
+                    row.cells[2].querySelector('select').value = item.status;
+                    row.cells[3].querySelector('textarea').value = item.description;
+                });
+            }
+            if (formData.discussionItems) {
+                const discussionTable = document.getElementById('discussion-items').getElementsByTagName('tbody')[0];
+                while (discussionTable.rows.length > 1) discussionTable.deleteRow(1);
+                formData.discussionItems.forEach((item, index) => {
+                    if (index > 0) addRow('discussion-items');
+                    const row = discussionTable.rows[index];
+                    row.cells[0].querySelector('textarea').value = item.topic;
+                    row.cells[1].querySelector('textarea').value = item.content;
+                    row.cells[2].querySelector('textarea').value = item.conclusion;
+                    row.cells[3].querySelector('select').value = item.responsible;
+                    row.cells[4].querySelector('input').value = item.deadline;
+                });
+            }
+            updateResponsiblePersonOptions();
+        }
+		
+        function exportJSON() {
+            collectFormData();
+            const meetingNumber = formData.meetingInfo.number || 'meeting';
+            const date = new Date().toISOString().split('T')[0];
+            const jsonStr = JSON.stringify(formData, null, 2);
+            const blob = new Blob([jsonStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${meetingNumber}_${date}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+function exportMarkdown() {
+    collectFormData(); // 確保資料是最新的
+    let mdContent = `# ${formData.meetingInfo.title || '會議紀錄'}\n\n`;
+
+    // 會議資訊
+    mdContent += `## 會議資訊\n`;
+    mdContent += `- **會議編號**：${formData.meetingInfo.number || ''}\n`;
+    mdContent += `- **日期時間**：${formData.meetingInfo.datetime || ''}\n`;
+    mdContent += `- **地點**：${formData.meetingInfo.location || ''}\n`;
+    mdContent += `- **會議類型**：${formData.meetingInfo.types.length > 0 ? formData.meetingInfo.types.join('、') : '無'}\n\n`;
+
+    // 出席人員
+    mdContent += `## 出席人員\n`;
+    mdContent += `- **主持人**：${document.getElementById('host').options[document.getElementById('host').selectedIndex]?.text || ''}\n`;
+    mdContent += `- **記錄者**：${document.getElementById('recorder').options[document.getElementById('recorder').selectedIndex]?.text || ''}\n\n`;
+    if (formData.participants.attendees.length > 0) {
+        mdContent += `| 單位          | 職稱          | 姓名         |\n`;
+        mdContent += `|---------------|---------------|--------------|\n`;
+        formData.participants.attendees.forEach(attendee => {
+            if (attendee.name) {
+                const unit = attendee.unit || '';
+                const title = attendee.title || '';
+                const name = attendee.name || '';
+                mdContent += `| ${unit.replace(/\|/g, '\\|')} | ${title.replace(/\|/g, '\\|')} | ${name.replace(/\|/g, '\\|')} |\n`;
+            }
+        });
+        mdContent += `\n`;
+    }
+
+    // 前次追蹤事項
+    mdContent += `## 前次追蹤事項\n`;
+    if (formData.previousItems.length > 0) {
+        mdContent += `| 項目          | 負責人         | 狀態    | 說明          |\n`;
+        mdContent += `|---------------|----------------|---------|---------------|\n`;
+        formData.previousItems.forEach(item => {
+            if (item.item) {
+                const responsibleText = document.querySelector(`#previous-items select[value="${item.responsible}"]`)?.selectedOptions[0]?.text || item.responsible || '不指定';
+                const itemText = item.item.replace(/\|/g, '\\|').replace(/\n/g, '<br>');
+                const descText = item.description.replace(/\|/g, '\\|').replace(/\n/g, '<br>');
+                mdContent += `| ${itemText} | ${responsibleText.replace(/\|/g, '\\|')} | ${item.status || ''} | ${descText} |\n`;
+            }
+        });
+        mdContent += `\n`;
+    } else {
+        mdContent += `無前次追蹤事項。\n\n`;
+    }
+
+    // 本次討論事項 - 使用 <br> 處理換行，保持欄寬 15%/30%/30%/15%/10%
+    mdContent += `## 本次討論事項\n`;
+    if (formData.discussionItems.length > 0) {
+        mdContent += `| 主題            | 討論內容                              | 結論                              | 負責人           | 期限       |\n`;
+        mdContent += `|---------------|-------------------------------|-------------------------------|-----------------|------------|\n`;
+        formData.discussionItems.forEach(item => {
+            if (item.topic) {
+                const responsibleText = document.querySelector(`#discussion-items select[value="${item.responsible}"]`)?.selectedOptions[0]?.text || item.responsible || '不指定';
+                const topicText = item.topic.replace(/\|/g, '\\|').replace(/\n/g, '<br>');
+                const contentText = item.content.replace(/\|/g, '\\|').replace(/\n/g, '<br>');
+                const conclusionText = item.conclusion.replace(/\|/g, '\\|').replace(/\n/g, '<br>');
+                mdContent += `| ${topicText} | ${contentText} | ${conclusionText} | ${responsibleText.replace(/\|/g, '\\|')} | ${item.deadline || ''} |\n`;
+            }
+        });
+    } else {
+        mdContent += `無本次討論事項。\n`;
+    }
+
+    // 匯出檔案
+    const meetingNumber = formData.meetingInfo.number || 'meeting';
+    const date = new Date().toISOString().split('T')[0];
+    const blob = new Blob([mdContent], { type: 'text/markdown' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${meetingNumber}_${date}.md`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+
+        function importJSON(input) {
+            const file = input.files[0];
+            if (!file) {
+                alert('未選擇任何檔案，請選擇一個 JSON 檔案！');
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    formData = JSON.parse(e.target.result.trim());
+                    populateFormData();
+                    alert('資料匯入成功！');
+                } catch (error) {
+                    alert('檔案格式錯誤，請確認是否為正確的 JSON 檔案！');
+                    console.error('匯入錯誤:', error);
+                }
+            };
+            reader.onerror = function() {
+                alert('無法讀取檔案，請確認檔案是否存在且可訪問！');
+            };
+            reader.readAsText(file, 'UTF-8');
+            input.value = '';
+        }
+
+        async function exportWord() {
+            if (!validateForm()) return;
+            const loadingDiv = createLoadingIndicator('正在生成文件...');
+            try {
+                const contentContainer = await prepareWordContent();
+                if (contentContainer.innerHTML.length > 2000000) {
+                    if (!confirm('文件內容較大，可能影響匯出效率，是否繼續？')) return;
+                }
+                const converted = await htmlDocx.asBlob(contentContainer.innerHTML, {
+                    orientation: 'portrait',
+                    margins: { top: 1440, right: 1440, bottom: 1440, left: 1440 }
+                });
+                const meetingNumber = formData.meetingInfo.number || 'meeting';
+                const date = new Date().toISOString().split('T')[0];
+                const url = URL.createObjectURL(converted);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${meetingNumber}_${date}.docx`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            } catch (error) {
+                alert('Word 匯出失敗: ' + error.message);
+            } finally {
+                cleanupAfterPrint();
+                loadingDiv.remove();
+            }
+        }
+
+        function createLoadingIndicator(message) {
+            const div = document.createElement('div');
+            div.style.cssText = 'position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 20px; background: rgba(0,0,0,0.8); color: white; border-radius: 5px; z-index: 9999;';
+            div.textContent = message;
+            document.body.appendChild(div);
+            return div;
+        }
+
+async function prepareWordContent() {
+    const contentContainer = document.createElement('div');
+    contentContainer.appendChild(createBasicInfoSection());
+    contentContainer.appendChild(createAttendeeSection());
+    contentContainer.appendChild(createPreviousItemsSection());
+    contentContainer.appendChild(createDiscussionItemsSection());
+
+    const styleElement = document.createElement('style');
+    styleElement.textContent = `
+        * { font-family: "Microsoft JhengHei", "Noto Sans TC", sans-serif; }
+        .page-break { page-break-before: always; position: relative; }
+        table { border-collapse: collapse; width: 100%; margin-bottom: 10px; page-break-inside: avoid; table-layout: fixed; }
+        td, th { border: 1px solid black; padding: 8px; word-break: break-word; font-size: 10pt; line-height: 1.4; text-align: left; vertical-align: top; white-space: pre-wrap; }
+        th { background-color: #f5f5f5; font-weight: bold; }
+        .section { margin-bottom: 15px; page-break-inside: avoid; }
+        .section-title { font-weight: bold; margin-bottom: 10px; font-size: 12pt; color: #4CAF50; }
+        .info-table, .info-table td { border: none; }
+        h1 { font-size: 14pt; margin-bottom: 15px; text-align: center; }
+    `;
+    contentContainer.insertBefore(styleElement, contentContainer.firstChild);
+    return contentContainer;
+}
+
+function createBasicInfoSection() {
+    const basicInfo = document.createElement('div');
+    basicInfo.className = 'section';
+    basicInfo.innerHTML = `
+        <h1>${document.getElementById('meeting-title').value || '會議紀錄'}</h1>
+        <table class="info-table">
+            <tr>
+                <td style="width: 40%"><label>會議編號：</label>${formData.meetingInfo.number}</td>
+                <td style="width: 20%"><label>日期時間：</label>${document.getElementById('datetime-display').value}</td>
+                <td style="width: 40%"><label>地點：</label>${document.getElementById('meeting-location').value}</td>
+            </tr>
+        </table>
+        <div class="meeting-type">
+            <label>會議類型：</label>
+            ${Array.from(document.querySelectorAll('[name="meeting-type"]:checked')).map(cb => cb.nextSibling.textContent.trim()).join('、')}
+        </div>
+    `;
+    return basicInfo;
+}
+
+function createAttendeeSection() {
+    const section = document.createElement('div');
+    section.className = 'section';
+    section.innerHTML = `
+        <div class="section-title">出席人員</div>
+        <table>
+            <tr>
+                <th style="width: 15%"><label class="required">主持人</label></th>
+                <td>${document.getElementById('host').options[document.getElementById('host').selectedIndex]?.text || ''}</td>
+                <th style="width: 15%"><label class="required">記錄者</label></th>
+                <td>${document.getElementById('recorder').options[document.getElementById('recorder').selectedIndex]?.text || ''}</td>
+            </tr>
+        </table>
+        <table>
+            <tr><th style="width: 50%">單位</th><th style="width: 20%">職稱</th><th>姓名</th></tr>
+            ${Array.from(document.querySelectorAll('#attendee-list tbody tr')).map(row => {
+                const unit = row.querySelector('.unit-input').value;
+                const title = row.querySelector('.title-input').value;
+                const name = row.cells[2].querySelector('input').value;
+                return name ? `<tr><td>${unit}</td><td>${title}</td><td>${name}</td></tr>` : '';
+            }).join('')}
+        </table>
+    `;
+    return section;
+}
+
+function createPreviousItemsSection() {
+    const section = document.createElement('div');
+    section.className = 'section';
+    section.innerHTML = `
+        <div class="section-title">前次追蹤事項</div>
+        <table>
+            <tr><th style="width: 30%">項目</th><th>負責人</th><th style="width: 12%">狀態</th><th>說明</th></tr>
+            ${Array.from(document.querySelectorAll('#previous-items tbody tr')).map(row => {
+                const item = row.cells[0].querySelector('textarea').value;
+                const responsible = row.cells[1].querySelector('select').options[row.cells[1].querySelector('select').selectedIndex]?.text || '';
+                const status = row.cells[2].querySelector('select').options[row.cells[2].querySelector('select').selectedIndex]?.text || '';
+                const desc = row.cells[3].querySelector('textarea').value;
+                return item ? `<tr><td>${item}</td><td>${responsible}</td><td>${status}</td><td>${desc}</td></tr>` : '';
+            }).join('')}
+        </table>
+    `;
+    return section;
+}
+
+function createDiscussionItemsSection() {
+    const section = document.createElement('div');
+    section.className = 'section';
+    section.innerHTML = `
+        <div class="section-title">本次討論事項</div>
+        <table>
+            <tr><th>主題</th><th>討論內容</th><th>結論</th><th>負責人</th><th>期限</th></tr>
+            ${Array.from(document.querySelectorAll('#discussion-items tbody tr')).map(row => {
+                const topic = row.cells[0].querySelector('textarea').value;
+                const content = row.cells[1].querySelector('textarea').value;
+                const conclusion = row.cells[2].querySelector('textarea').value;
+                const responsible = row.cells[3].querySelector('select').options[row.cells[3].querySelector('select').selectedIndex]?.text || '';
+                const deadline = row.cells[4].querySelector('input').value;
+                return topic ? `<tr><td>${topic}</td><td>${content}</td><td>${conclusion}</td><td>${responsible}</td><td>${deadline}</td></tr>` : '';
+            }).join('')}
+        </table>
+    `;
+    return section;
+}
+
+
+		
+    </script>
+
+	
+		
