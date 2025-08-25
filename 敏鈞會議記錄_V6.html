@@ -900,6 +900,14 @@ function importPreviousItems(input) {
 
 function exportMarkdown() {
     collectFormData();
+    
+    // 處理文字中的換行符，替換為空格或 <br>
+    function sanitizeForTable(text) {
+        if (!text) return '';
+        // 將換行符替換為空格，並處理 | 符號避免破壞表格
+        return text.replace(/\r?\n/g, ' ').replace(/\|/g, '\\|').trim();
+    }
+    
     let mdContent = `# ${formData.meetingInfo.title || '會議記錄'}\n\n`;
 
     // 會議資訊
@@ -921,7 +929,7 @@ function exportMarkdown() {
         mdContent += `|------|------|------|\n`;
         formData.participants.attendees.forEach(attendee => {
             if (attendee.name) {
-                mdContent += `| ${attendee.unit || ''} | ${attendee.title || ''} | ${attendee.name || ''} |\n`;
+                mdContent += `| ${sanitizeForTable(attendee.unit)} | ${sanitizeForTable(attendee.title)} | ${sanitizeForTable(attendee.name)} |\n`;
             }
         });
         mdContent += `\n`;
@@ -935,7 +943,8 @@ function exportMarkdown() {
         mdContent += `|------|--------|------|------|\n`;
         formData.previousItems.forEach(item => {
             if (item.item) {
-                mdContent += `| ${item.item || ''} | ${item.responsible === 'none' ? '不指定' : item.responsible || ''} | ${item.status || ''} | ${item.description || ''} |\n`;
+                const responsible = item.responsible === 'none' ? '不指定' : sanitizeForTable(item.responsible);
+                mdContent += `| ${sanitizeForTable(item.item)} | ${responsible} | ${sanitizeForTable(item.status)} | ${sanitizeForTable(item.description)} |\n`;
             }
         });
         mdContent += `\n`;
@@ -952,7 +961,8 @@ function exportMarkdown() {
         formData.discussionItems.forEach(item => {
             if (item.topic) {
                 const trackStatus = item.track ? '✓' : '';
-                mdContent += `| ${item.topic || ''} | ${item.content || ''} | ${item.conclusion || ''} | ${item.responsible === 'none' ? '不指定' : item.responsible || ''} | ${item.deadline || ''} | ${trackStatus} |\n`;
+                const responsible = item.responsible === 'none' ? '不指定' : sanitizeForTable(item.responsible);
+                mdContent += `| ${sanitizeForTable(item.topic)} | ${sanitizeForTable(item.content)} | ${sanitizeForTable(item.conclusion)} | ${responsible} | ${sanitizeForTable(item.deadline)} | ${trackStatus} |\n`;
             }
         });
     } else {
