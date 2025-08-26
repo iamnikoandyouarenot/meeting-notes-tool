@@ -903,11 +903,21 @@ function importPreviousItems(input) {
 function exportMarkdown() {
     collectFormData();
     
-    // 處理文字中的換行符，替換為空格或 <br>
-    function sanitizeForTable(text) {
+    // 處理文字中的特殊字符，保留換行
+    function sanitizeForTable(text, preserveBreaks = false) {
         if (!text) return '';
-        // 將換行符替換為空格，並處理 | 符號避免破壞表格
-        return text.replace(/\r?\n/g, ' ').replace(/\|/g, '\\|').trim();
+        // 處理 | 符號避免破壞表格
+        let result = text.replace(/\|/g, '\\|');
+        
+        if (preserveBreaks) {
+            // 保留換行，使用 <br> 標籤（HTML 表格中可用）
+            result = result.replace(/\r?\n/g, '<br>');
+        } else {
+            // 純 Markdown 表格中，將換行替換為分號或逗號
+            result = result.replace(/\r?\n/g, '；');
+        }
+        
+        return result.trim();
     }
     
     let mdContent = `# ${formData.meetingInfo.title || '會議記錄'}\n\n`;
@@ -937,7 +947,7 @@ function exportMarkdown() {
         mdContent += `\n`;
     }
 
-    // 前次追蹤事項
+    // 前次追蹤事項 - 使用純 Markdown，換行符改為分號
     mdContent += `## 前次追蹤事項\n`;
     const hasValidPreviousItems = formData.previousItems.some(item => item.item);
     if (hasValidPreviousItems) {
@@ -954,19 +964,57 @@ function exportMarkdown() {
         mdContent += `無前次追蹤事項。\n\n`;
     }
 
-    // 本次討論事項
+    // 本次討論事項 - 使用 HTML 表格以支援換行
     mdContent += `## 本次討論事項\n`;
-    const hasValidDiscussionItems = formData.discussionItems.some(item => item.topic);
-    if (hasValidDiscussionItems) {
+    
+    if (formData.discussionItems && formData.discussionItems.length > 0) {
+        // 使用 HTML 表格格式，支援 <br> 換行
+        mdContent += `<table>\n`;
+        mdContent += `<thead>\n`;
+        mdContent += `<tr>\n`;
+        mdContent += `<th width="20%">主題</th>\n`;
+        mdContent += `<th width="25%">討論內容</th>\n`;
+        mdContent += `<th width="25%">結論</th>\n`;
+        mdContent += `<th width="15%">負責人</th>\n`;
+        mdContent += `<th width="10%">期限</th>\n`;
+        mdContent += `<th width="5%">列入追蹤</th>\n`;
+        mdContent += `</tr>\n`;
+        mdContent += `</thead>\n`;
+        mdContent += `<tbody>\n`;
+        
+        // 輸出所有列，保留換行
+        formData.discussionItems.forEach((item, index) => {
+            const topic = sanitizeForTable(item.topic, true) || `(項目 ${index + 1})`;
+            const trackStatus = item.track ? '✓' : '';
+            const responsible = item.responsible === 'none' ? '不指定' : sanitizeForTable(item.responsible, true);
+            
+            mdContent += `<tr>\n`;
+            mdContent += `<td>${topic}</td>\n`;
+            mdContent += `<td>${sanitizeForTable(item.content, true)}</td>\n`;
+            mdContent += `<td>${sanitizeForTable(item.conclusion, true)}</td>\n`;
+            mdContent += `<td>${responsible}</td>\n`;
+            mdContent += `<td>${sanitizeForTable(item.deadline, true)}</td>\n`;
+            mdContent += `<td align="center">${trackStatus}</td>\n`;
+            mdContent += `</tr>\n`;
+        });
+        
+        mdContent += `</tbody>\n`;
+        mdContent += `</table>\n\n`;
+        
+        // 純 Markdown 表格備份（使用分號代替換行）
+        mdContent += `\n<!-- 純 Markdown 表格備份 -->\n`;
+        mdContent += `<!-- 如果上方 HTML 表格無法正確顯示，請使用以下表格：\n\n`;
         mdContent += `| 主題 | 討論內容 | 結論 | 負責人 | 期限 | 列入追蹤 |\n`;
         mdContent += `|------|----------|------|--------|------|----------|\n`;
-        formData.discussionItems.forEach(item => {
-            if (item.topic) {
-                const trackStatus = item.track ? '✓' : '';
-                const responsible = item.responsible === 'none' ? '不指定' : sanitizeForTable(item.responsible);
-                mdContent += `| ${sanitizeForTable(item.topic)} | ${sanitizeForTable(item.content)} | ${sanitizeForTable(item.conclusion)} | ${responsible} | ${sanitizeForTable(item.deadline)} | ${trackStatus} |\n`;
-            }
+        
+        formData.discussionItems.forEach((item, index) => {
+            const topic = sanitizeForTable(item.topic, false) || `(項目 ${index + 1})`;
+            const trackStatus = item.track ? '✓' : '';
+            const responsible = item.responsible === 'none' ? '不指定' : sanitizeForTable(item.responsible, false);
+            mdContent += `| ${topic} | ${sanitizeForTable(item.content, false)} | ${sanitizeForTable(item.conclusion, false)} | ${responsible} | ${sanitizeForTable(item.deadline, false)} | ${trackStatus} |\n`;
         });
+        
+        mdContent += `-->\n`;
     } else {
         mdContent += `無本次討論事項。\n`;
     }
