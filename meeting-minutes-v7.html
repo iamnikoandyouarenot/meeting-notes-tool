@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>專案會議記錄 V7</title>
+    <!-- 手機主頁捷徑 icon 與 PWA 設定 -->
+    <meta name="theme-color" content="#388E3C">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="會議記錄">
+    <link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,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">
+    <link rel="apple-touch-icon" sizes="180x180" href="data:image/png;base64,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">
+    <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%20%22%E5%B0%88%E6%A1%88%E6%9C%83%E8%AD%B0%E8%A8%98%E9%8C%84%22%2C%20%22short_name%22%3A%20%22%E6%9C%83%E8%AD%B0%E8%A8%98%E9%8C%84%22%2C%20%22display%22%3A%20%22standalone%22%2C%20%22start_url%22%3A%20%22.%22%2C%20%22background_color%22%3A%20%22%23ffffff%22%2C%20%22theme_color%22%3A%20%22%23388E3C%22%2C%20%22icons%22%3A%20%5B%7B%22src%22%3A%20%22data%3Aimage/png%3Bbase64%2CiVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAYAAAA9zQYyAAALFElEQVR4nO3de3BU5RkG8Gc3EYOBBrlUabiYBIZbOyEQyAWClAIiUyoMFrk4oCLamc5UIw4g4%2BjoVEeqA0KtLVPHodQOrVMlXEqVVgSSkISbVaCgAkmAgmBACKQEQrL9o27IZs/untvu%2Bc57nt9fsHs255w9Dy/v9%2B35Nj446Mfrp452cv8UH5unlZQ5tW9fonbE8HpbokIe10AzxKQlnuGOS6AZZNIjHsG2NdAMMplhZ7BtCTSDTHawI9h%2Bqz%2BAYSa72JElS4FmmMluVjNlquVgkCkRzLQghis0w0yJYiZrhgLNMFOiGc2c7kAzzOQUI9nTFWiGmZymN4MxA80wkyr0ZNHyPDSRSqIGmtWZVBMrkxEDzTCTqqJlUzPQDDOpLlJG2UOTKGGBZnUmt9DKKis0iRISaFZncpv2mWWFJlFaA83qTG7VNrus0CQKA02i%2BAG2G%2BR%2BwQyzQpMoDDSJwkCTKMlOH4AVm6auL3X6GKSaUjKtyOljMMPnxgEhg5w4bgu2qwLNIDvHLcF2TQ/NMDvLLe%2B/KwLtljdTOjdcB%2BUD7YY30UtUvx7KB5rICKUDrXo18CqVr4vSgSYyStlAq1wFSN3ro2ygicxgoEkUV9/LobIAAjh98XTY4z3TesLvYx2JFwY6DgII4NWPlmP9ZyVhz43sOwK/nPwCOqd0TvyBeQBLhc1utNzAy1uXaYYZAHbX7sEj6x5DzYXaxB6YRzDQNqpvrMcT7z2FzYf%2BFnW7UxdP4dF1j6O8uiJBR%2BYdDLRNdlVXYM4f52H/qU90bd9wvQGLNizBG6Vv4mpTY5yPzjsYaIsarjfgpa2vYGHJItRdqQt7PsmfhOKxT2DwnYPCnmsJtOBPe9dh5prZ2H50RyIOVzwG2oKq2t2Ys3ZuxBaj4y0peO2%2BZZiRcz9%2B89NVKMrSvvX83JWv8cymZ1G8/mmcungqnocsHgNtwsEzh/CL94rx5PsLcfbyOc1tenfphdUP/Bb5d%2BUBAFKSU/DKlJewoHA%2BkvxJmq%2BprKnC7LVzseyfr6KWg0ZTOG1nwOfnvsDvd70VczA3rv9YLJ24BKkdUkMe9/v8eCTvIYzsk4vn//4iTl86E/bapuYmlBzYiA0HNmFUZiHm5M7C0PRsW89DMgY6hpZAC/ac2Iv3P12Pncf0/abebV9ux7Yvt1vabwABlB0vR9nxcgy6YyAmD56Eu/uNQY9OPSz9XOkY6AhqL9Riy78/wJbDH2gO9tpK8ich2Z%2BMazeumdqX3%2BdHS6Al4vOHzx7B4bNHsPzjlRjSczDG9rsbY/uNQXqXdFP7k4w9tIbFG5di5h8exNo970QNs9/nx6RBE/Hnee8gs1uG6f0NumMgfn3/SuT0Ghp1uwACOHjmEN4ofRNrdq81vT/JWKE1TM%2BehtJjZQggoPm8Dz78aMA4PJr/MPp27QsAmDX8AVz47zem9tfttq7I7T0Mub2H4V//%2BRRvV67BnhN7I26f2S0TC8cVm9qXdAy0hpF9R2Dm8BlYt%2B8vIY/74MOYfkVYUDAfWd0zQ56bMGC8Lfsemp6NVdNX4MDpg3i7ag0qa6pCnk/yJ%2BHFyc8jJTnFlv1Jw0BHsKBgPv7x%2BUeou1KHtJQ09O%2BRhb0n92PH0Z3YcXRnQo8ls1sGzjdcwKXGS5iZMyPsHxPdxEBH0PGWjlg6YTEuN17GD/uPRUVNFfae3O/IsUwYMB4PjpiNypoqDO89zJFjcAsGOoqCu/KdPoRWyf5kjM4c5fRhKI%2BBtuC5Sc8itUMqmpqv47PTB1BZsxs5vbJRmFEIANh3ch/e/eSvrdunpaRh6cQlAICm5ut4bssL6J7aDTm9cjC0Vza63tYVX9V/hRXbVzpyPhIk11XXlXbP6O6K7y1TTWFGPs7Wn8PP3v05rjZdBQB8J6UzloxfBAC4cu1yyPa3JnfAmG/v56iq3Y2WQAvOXfkaHx7Zig%2BPbMWyn7yM3D7DE3sSgtRV15VyHtqifj2y0OnWTq1/P3jmEA6fPRLzddvbDSzTu6Rj1LeVncxjoC3y%2B/y4d9A9IY%2B1D2t7Tc1N2PbFxyGPPTxyXsSblkg/BtoGwTvqgiqqK6NuX3qsDPWN9a1/73N7H9w7%2BJ4oryC9OCi0wfd7DkGH5A7okdodo7NGoyjGbETv23tj5rAZ2FVdiRPfnMBjhfO5EtwmvvzlowMAoNrAULVv5tl5rAyLNz7jyL4fL1yAh/LmOrLvaFT6EvS66rpSgC0HCcNAkyitPTTno6PLSc/GW7NWO7Lv7/Km/qiC7QbAQaFunVM6Y8idgwEAmw9tQeON%2BH/1wKSBE0PmuCm2kECzSuvzu/LVON9wIe77Gdknl4GOoW11BthDkzBhgW6feCJVaWWVPbRNXpv6K4zKKDD12vLqCjxdssjmI/ImzZaDVZpUFymjESs0B4jGsMImTrSCG3VQyEpNqomVSc5ykCgxB4VsPfS57wdTkGHyy2aqz1djw4FNNh%2BRPHo6Bl2zHAx1bEVZRZZmORjo6PS2v7qn7Rjq6MqP78KZ%2BvBvE9XjeF21zUcji5GxnKF5aIY6ski/JIisMToxYXhQyJkPShQzWTP1SWFwR6zWFA9Wiqalj77ZgtzEj77tYbUDsHwvhxdDvWr662huaQ557HtpPU3/vMKMfJQ/Gf5bsLy2cNaOdtaWm5O81oJY%2BXJzLT744PP5bP2ZbmLnuMzWu%2B28FmyyJh4TDHG5fZTBpmjiOVMW1/uh2x44w%2B1tiZruTdgN/lonxJDL5ORnFY6uWOGHNO6m4vUTtwSrYEXsol9RrNx1IJuImujUE2Yj25H7iKnQwZBGq74FK4pQUVyKghVFrX8mWcQEOpZg4I1W56qqqtgbuVReXl7sjVxGVMuhh5GqLDnMgMzz80SgzfTMEi%2B2FmnnKTLQbQPc9s/smeUT10NH6pUZZm8QV6G1gmsmzBIHTFqknae4QAP2VWNpF7s9iecnruUICs43Ww23xIsuWetvwVKNmSAamc1gT22dip%2B4imo59IaUYZZLXMvBsHqbqApNxECTKAw0icJAkyjiBoVcseJtoio0V6yQmArNFSsECAp0LFyxEk7ix/qiWg49uGLlJonn54lAc8VKZNLOU2SguWLFu8T10Fyx4m3iKjRXrBgj7TzFBRrgihW9JJ6fuJYjiCtWvIkrVsg0FT9xFdVycMUKiWs5GFZvE1WhiRhoEoWBJlEYaBJF3KCQK1a8TVSF5ooVElOh9axYabstV6zIJCbQ8SLtfuG2JH6sL6rlsJvkMAMyz4%2BBjkDixdYi7TwZaBKFgSZRGOgIJA6YtEg7TwY6CmkXuz2J58dpuxgkXnTJxAS67Vd86d2e5BHVcnDFComp0EEMq7cpW6F5A5HaVL0%2BygaayAylA61qFfA6la%2BL0oEmMkr5QKtcDbxI9euhfKAB9d9Er3DDdXBFoAF3vJmSueX99wGAqt9vFwnnmhPHLUEGgMqnynyu/GDFyPpBMsdNQW7LlYEOcuubTvHjmh6aSA8GmkTxA/9vpp0%2BECIrghlmhSZRGGgSpTXQbDvIrdpmlxWaRAkJNKs0uU37zLJCkyhhgWaVJrfQyiorNImiGWhWaVJdpIxGrNAMNakqWjajthwMNakmVibZQ5MoMQPNKk2q0JNFXRWaoSan6c2g7paDoSanGMmeoR6aoaZEM5o5w4NChpoSxUzWLIXTbV9/QO5gpWhamrZjtSa7Wc2U5XlohprsYkeWbA0jWxAyw86iGJfqymCTHvH43z2u7QKDTVri2aYmrP9luL0tUWMtRwd0DLlMTk4U/A9M0uHE7aF1zgAAAABJRU5ErkJggg%3D%3D%22%2C%20%22sizes%22%3A%20%22180x180%22%2C%20%22type%22%3A%20%22image/png%22%7D%5D%7D">
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --primary-dark: #388E3C;
+            --primary-light: #e8f5e9;
+            --danger-color: #f44336;
+            --info-color: #2196F3;
+            --border-color: #ddd;
+            --bg-color: #f5f5f5;
+            --spacing-unit: 4px;
+            --form-element-height: 34px;
+        }
+        * { box-sizing: border-box; }
+        body {
+            font-family: "Noto Sans TC", sans-serif;
+            font-size: 14px;
+            line-height: 1.5;
+            margin: 0;
+            padding: 0 15mm 30px;
+            color: #333;
+        }
+        /* ── 工具列：固定置頂 ── */
+        .button-group {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: #fff;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            align-items: center;
+            padding: 12px 0;
+            margin-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .button-group .spacer { flex: 1; }
+        /* ── 區塊 ── */
+        .section {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            overflow-x: auto;
+        }
+        .section-title {
+            font-weight: bold;
+            font-size: 15px;
+            margin: -15px -15px 12px;
+            padding: 8px 15px;
+            color: var(--primary-dark);
+            background: var(--primary-light);
+            border-left: 4px solid var(--primary-color);
+            border-radius: 6px 6px 0 0;
+        }
+        /* ── 表格 ── */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 10px;
+        }
+        #attendee-list { min-width: 560px; }
+        #previous-items { min-width: 640px; }
+        #discussion-items { min-width: 760px; }
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: var(--spacing-unit);
+        }
+        th {
+            background-color: var(--bg-color);
+            font-weight: normal;
+        }
+        tbody tr:nth-child(even) td { background-color: #fafafa; }
+        tbody tr:hover td { background-color: #f1f8f1; }
+        /* ── 表單元件 ── */
+        .form-control {
+            width: 100%;
+            padding: 5px 6px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            height: var(--form-element-height);
+            font-family: inherit;
+            font-size: inherit;
+            background: #fff;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.18);
+        }
+        textarea.form-control { height: auto; resize: vertical; }
+        .required::after {
+            content: "*";
+            color: var(--danger-color);
+            margin-left: 4px;
+        }
+        /* ── 按鈕 ── */
+        .btn {
+            padding: 6px 14px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-family: inherit;
+            color: white;
+            transition: filter 0.15s, transform 0.05s;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.12);
+        }
+        .btn:hover { filter: brightness(0.92); }
+        .btn:active { transform: translateY(1px); }
+        .btn-primary { background-color: var(--primary-color); }
+        .btn-danger { background-color: var(--danger-color); }
+        .btn-info { background-color: var(--info-color); }
+        .btn-sm { padding: 4px 10px; font-size: 12px; }
+        /* ── 驗證訊息 ── */
+        .alert {
+            padding: 10px 14px;
+            margin: 5px 0 12px;
+            border-radius: 6px;
+            display: none;
+        }
+        .alert-danger {
+            background-color: #ffebee;
+            color: var(--danger-color);
+            border: 1px solid var(--danger-color);
+        }
+        .alert-danger ul { margin: 4px 0 0; padding-left: 20px; }
+        /* ── Toast ── */
+        #toast-container {
+            position: fixed;
+            top: 60px;
+            right: 16px;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .toast {
+            padding: 10px 16px;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 13px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            opacity: 0;
+            transform: translateX(20px);
+            transition: opacity 0.25s, transform 0.25s;
+            max-width: 320px;
+            white-space: pre-line;
+        }
+        .toast.show { opacity: 1; transform: translateX(0); }
+        .toast-success { background: var(--primary-dark); }
+        .toast-error { background: var(--danger-color); }
+        .toast-info { background: var(--info-color); }
+        /* ── 會議資訊 ── */
+        .info-table { width: 100%; border: none !important; margin-bottom: 6px; min-width: 0; }
+        .info-table td { border: none !important; padding: 2px 6px !important; vertical-align: middle !important; background: transparent !important; }
+        .datetime-picker {
+            display: none;
+            position: absolute;
+            background: white;
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+        .datetime-wrap { position: relative; display: inline-block; }
+        .meeting-number-group { display: flex; gap: 5px; align-items: center; flex-wrap: wrap; }
+        .meeting-number-group input { width: auto; padding: 2px 4px; }
+        #project-code { width: 72px; }
+        #meeting-date-input { width: 92px; }
+        #department { width: 44px; }
+        #version { width: 44px; }
+        .track-checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: var(--primary-color);
+        }
+        /* ── 拖曳把手 ── */
+        .col-handle { width: 26px; text-align: center; }
+        .drag-handle {
+            cursor: grab;
+            color: #aaa;
+            user-select: none;
+            font-size: 15px;
+            display: block;
+            text-align: center;
+        }
+        .drag-handle:active { cursor: grabbing; }
+        tr.data-row.dragover td { background-color: #e0f7fa !important; }
+        .col-action { width: 60px; }
+        /* ── 響應式 ── */
+        @media (max-width: 600px) {
+            body { padding: 0 10px 30px; }
+            .info-table, .info-table tr, .info-table td { display: block; width: 100% !important; }
+        }
+        /* ── 列印 ── */
+        @media print {
+            body { font-size: 10pt; padding: 0; }
+            .btn, .button-group, #validation-alert, #toast-container,
+            .datetime-picker, input[type="file"],
+            .col-handle, .col-action { display: none !important; }
+            .section { border: none !important; padding: 10px 0 !important; overflow: visible; }
+            .section-title { background: none; border-left: none; margin: 0 0 8px; padding: 0; }
+            table { min-width: 0 !important; }
+            table, th, td { border: 1px solid #000 !important; }
+            th { background-color: #f5f5f5 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            tbody tr:nth-child(even) td, tbody tr:hover td { background: transparent !important; }
+            .info-table, .info-table td { border: none !important; }
+            .print-text { border: none; background: transparent; padding: 4px; white-space: pre-wrap; }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="toast-container"></div>
+    <div id="validation-alert" class="alert alert-danger"></div>
+    <div class="button-group">
+        <button type="button" onclick="handlePrint()" class="btn btn-info" title="列印會議記錄 (Ctrl+P / Cmd+P)">列印</button>
+        <button type="button" onclick="exportJSON()" class="btn btn-primary" title="匯出為 JSON 格式">匯出JSON</button>
+        <button type="button" onclick="exportMarkdown()" class="btn btn-primary" title="匯出為 Markdown 格式">匯出MD</button>
+        <input type="file" id="importJSON" style="display: none" accept=".json" onchange="importJSON(this)">
+        <button type="button" onclick="document.getElementById('importJSON').click()" class="btn btn-info" title="匯入先前保存的 JSON">匯入JSON</button>
+        <div class="spacer"></div>
+        <button type="button" onclick="clearForm()" class="btn btn-danger" title="清除所有資料">清除表單</button>
+    </div>
+
+    <div class="section">
+        <h1><input type="text" class="form-control" id="meeting-title" value="會議記錄" data-label="會議標題" style="text-align: center; font-size: 18px; font-weight: bold; width: 100%; border: none; background: transparent; height: auto;" required></h1>
+        <table class="info-table">
+            <tr>
+                <td style="width: 40%">
+                    <label class="required" for="project-code">會議編號：</label>
+                    <div class="meeting-number-group">
+                        <span>MM-</span>
+                        <input type="text" class="form-control" id="project-code" maxlength="6" placeholder="案號" data-label="會議編號-案號" required>
+                        <span>-</span>
+                        <input type="text" class="form-control" id="meeting-date-input" maxlength="8" placeholder="日期" data-label="會議編號-日期" required>
+                        <span>-</span>
+                        <input type="text" class="form-control" id="department" maxlength="2" placeholder="部門" data-label="會議編號-部門" required>
+                        <span>-</span>
+                        <input type="text" class="form-control" id="version" maxlength="2" placeholder="版次" data-label="會議編號-版次" required>
+                    </div>
+                </td>
+                <td style="width: 20%">
+                    <label class="required" for="datetime-display">日期時間：</label>
+                    <div class="datetime-wrap">
+                        <input type="text" id="datetime-display" class="form-control" readonly style="width: 160px;" data-label="日期時間" required>
+                        <div class="datetime-picker">
+                            <input type="date" id="meeting-date" class="form-control">
+                            <input type="time" id="meeting-time" class="form-control" step="300">
+                        </div>
+                    </div>
+                </td>
+                <td style="width: 40%">
+                    <label class="required" for="meeting-location">地點：</label>
+                    <input type="text" class="form-control" id="meeting-location" data-label="地點" required>
+                </td>
+            </tr>
+        </table>
+        <div class="meeting-type" style="margin-top: 10px;">
+            <label class="required">會議類型：</label>
+            <label><input type="checkbox" name="meeting-type" value="一般會議"> 一般會議</label>
+            <label><input type="checkbox" name="meeting-type" value="建築設計"> 建築設計</label>
+            <label><input type="checkbox" name="meeting-type" value="室內設計"> 室內設計</label>
+            <label><input type="checkbox" name="meeting-type" value="其他顧問"> 其他顧問</label>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">出席人員</div>
+        <table class="info-table">
+            <tr>
+                <td style="width: 10%"><label class="required" for="host">主持人</label></td>
+                <td style="width: 40%"><select id="host" class="form-control" data-label="主持人" required><option value="">請選擇...</option></select></td>
+                <td style="width: 10%"><label class="required" for="recorder">記錄者</label></td>
+                <td style="width: 40%"><select id="recorder" class="form-control" data-label="記錄者" required><option value="">請選擇...</option></select></td>
+            </tr>
+        </table>
+        <table id="attendee-list">
+            <thead>
+                <tr>
+                    <th class="col-handle"></th>
+                    <th style="width: 45%">單位</th>
+                    <th style="width: 20%">職稱</th>
+                    <th>姓名</th>
+                    <th class="col-action">操作</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+        <datalist id="unit-suggestions">
+            <option>業主方</option>
+            <option>建築師事務所</option>
+            <option>現現設計</option>
+            <option>其他</option>
+        </datalist>
+        <datalist id="title-suggestions">
+            <option>經理</option>
+            <option>總經理</option>
+            <option>專案經理</option>
+            <option>建築師</option>
+            <option>設計師</option>
+            <option>工程師</option>
+        </datalist>
+        <button type="button" class="btn btn-primary" onclick="addRow('attendee-list')">新增出席者</button>
+    </div>
+
+    <div class="section">
+        <div class="section-title">前次追蹤事項</div>
+        <table id="previous-items">
+            <thead>
+                <tr>
+                    <th class="col-handle"></th>
+                    <th style="width: 28%">項目</th>
+                    <th>負責人</th>
+                    <th style="width: 12%">狀態</th>
+                    <th style="width: 28%">說明</th>
+                    <th class="col-action">操作</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+        <button type="button" class="btn btn-primary" onclick="addRow('previous-items')">新增追蹤事項</button>
+        <input type="file" id="importPreviousJSON" style="display: none" accept=".json" onchange="importPreviousItems(this)">
+        <button type="button" class="btn btn-info" onclick="document.getElementById('importPreviousJSON').click()">從前次匯入</button>
+    </div>
+
+    <div class="section">
+        <div class="section-title">本次討論事項</div>
+        <table id="discussion-items">
+            <thead>
+                <tr>
+                    <th class="col-handle"></th>
+                    <th style="width: 14%">主題</th>
+                    <th style="width: 24%">討論內容</th>
+                    <th style="width: 24%">結論</th>
+                    <th style="width: 12%">負責人</th>
+                    <th style="width: 10%">期限</th>
+                    <th style="width: 7%; text-align: center;">列入追蹤</th>
+                    <th class="col-action">操作</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+        <button type="button" class="btn btn-primary" onclick="addRow('discussion-items')">新增討論事項</button>
+    </div>
+
+<script>
+'use strict';
+// ============ 全域狀態 ============
+let formData = {
+    meetingInfo: { title: '會議記錄', number: '', datetime: '', location: '', types: [], projectCode: '', date: '', department: '', version: '' },
+    participants: { host: '', recorder: '', attendees: [] },
+    previousItems: [],
+    discussionItems: []
+};
+let draggedRow = null;
+let saveTimer = null;
+
+// ============ 列模板 ============
+const ROW_TEMPLATES = {
+    'attendee-list': `
+        <td class="col-handle"><span class="drag-handle" title="拖曳排序">⠿</span></td>
+        <td><input type="text" class="form-control unit-input" list="unit-suggestions" placeholder="選擇或輸入單位"></td>
+        <td><input type="text" class="form-control title-input" list="title-suggestions" placeholder="輸入職稱"></td>
+        <td><input type="text" class="form-control name-input" placeholder="輸入姓名"></td>
+        <td class="col-action"><button type="button" class="btn btn-danger btn-sm delete-btn">刪除</button></td>`,
+    'previous-items': `
+        <td class="col-handle"><span class="drag-handle" title="拖曳排序">⠿</span></td>
+        <td><textarea class="form-control item-input" rows="2"></textarea></td>
+        <td><select class="form-control responsible-person"><option value="">請選擇...</option><option value="none">不指定</option></select></td>
+        <td><select class="form-control status-select"><option>已完成</option><option>進行中</option><option>待辦</option></select></td>
+        <td><textarea class="form-control desc-input" rows="2"></textarea></td>
+        <td class="col-action"><button type="button" class="btn btn-danger btn-sm delete-btn">刪除</button></td>`,
+    'discussion-items': `
+        <td class="col-handle"><span class="drag-handle" title="拖曳排序">⠿</span></td>
+        <td><textarea class="form-control topic-input" rows="2"></textarea></td>
+        <td><textarea class="form-control content-input" rows="3"></textarea></td>
+        <td><textarea class="form-control conclusion-input" rows="2"></textarea></td>
+        <td><select class="form-control responsible-person"><option value="">請選擇...</option><option value="none">不指定</option></select></td>
+        <td><input type="date" class="form-control deadline-input"></td>
+        <td style="text-align: center;"><input type="checkbox" class="track-checkbox"></td>
+        <td class="col-action"><button type="button" class="btn btn-danger btn-sm delete-btn">刪除</button></td>`
+};
+
+// ============ 初始化 ============
+document.addEventListener('DOMContentLoaded', function() {
+    loadFromLocalStorage();
+    // 確保三個表格至少各有一列
+    ['attendee-list', 'previous-items', 'discussion-items'].forEach(id => {
+        if (tbodyOf(id).rows.length === 0) addRow(id);
+    });
+    initMeetingNumber();
+    initDateTime();
+    populateFormData();
+    setupEventDelegation();
+    updateResponsiblePersonOptions();
+});
+
+function tbodyOf(tableId) {
+    return document.getElementById(tableId).tBodies[0];
+}
+
+// ============ Toast ============
+function showToast(message, type = 'success', duration = 3200) {
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    toast.textContent = message;
+    container.appendChild(toast);
+    requestAnimationFrame(() => toast.classList.add('show'));
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+    }, duration);
+}
+
+// ============ 儲存 / 載入 ============
+function loadFromLocalStorage() {
+    const savedData = localStorage.getItem('meetingFormData');
+    if (savedData) {
+        try {
+            const parsed = JSON.parse(savedData);
+            if (isValidFormData(parsed)) formData = normalizeFormData(parsed);
+        } catch (e) {
+            console.error('Failed to parse saved data:', e);
+        }
+    }
+}
+
+function scheduleSave() {
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(saveFormData, 400);
+}
+
+function saveFormData() {
+    collectFormData();
+    try {
+        localStorage.setItem('meetingFormData', JSON.stringify(formData));
+    } catch (e) {
+        console.error('Failed to save data:', e);
+    }
+}
+
+// 匯入資料的結構驗證與正規化
+function isValidFormData(data) {
+    return data && typeof data === 'object' && !Array.isArray(data) &&
+           (data.meetingInfo || data.participants || data.previousItems || data.discussionItems);
+}
+
+function normalizeFormData(data) {
+    return {
+        meetingInfo: Object.assign({ title: '會議記錄', number: '', datetime: '', location: '', types: [], projectCode: '', date: '', department: '', version: '' }, data.meetingInfo || {}),
+        participants: Object.assign({ host: '', recorder: '', attendees: [] }, data.participants || {}),
+        previousItems: Array.isArray(data.previousItems) ? data.previousItems : [],
+        discussionItems: Array.isArray(data.discussionItems) ? data.discussionItems : []
+    };
+}
+
+// ============ 會議編號 ============
+function todayYYYYMMDD() {
+    const now = new Date();
+    return `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}`;
+}
+
+function initMeetingNumber() {
+    const projectCodeInput = document.getElementById('project-code');
+    const dateInput = document.getElementById('meeting-date-input');
+    const departmentInput = document.getElementById('department');
+    const versionInput = document.getElementById('version');
+
+    if (formData.meetingInfo && formData.meetingInfo.number && formData.meetingInfo.number.split('-').length >= 5) {
+        const parts = formData.meetingInfo.number.split('-');
+        projectCodeInput.value = parts[1] || '113E06';
+        dateInput.value = parts[2] || todayYYYYMMDD();
+        departmentInput.value = parts[3] || 'NN';
+        versionInput.value = parts[4] || '01';
+    } else {
+        projectCodeInput.value = '113E06';
+        dateInput.value = todayYYYYMMDD();
+        departmentInput.value = 'NN';
+        // 版次遞增只在這裡發生（clearForm 不再重複遞增）
+        const version = parseInt(localStorage.getItem('meetingVersion') || '0') + 1;
+        versionInput.value = String(version).padStart(2, '0');
+        localStorage.setItem('meetingVersion', version.toString());
+    }
+
+    [projectCodeInput, dateInput, departmentInput, versionInput].forEach(input => {
+        input.addEventListener('input', updateMeetingNumber);
+    });
+    updateMeetingNumber();
+}
+
+function updateMeetingNumber() {
+    const projectCode = document.getElementById('project-code').value || '';
+    const date = document.getElementById('meeting-date-input').value || '';
+    const department = document.getElementById('department').value || '';
+    const version = document.getElementById('version').value || '';
+    formData.meetingInfo.number = `MM-${projectCode}-${date}-${department}-${version}`;
+    scheduleSave();
+}
+
+// ============ 日期時間 ============
+function initDateTime() {
+    const now = new Date();
+    const dateInput = document.getElementById('meeting-date');
+    const timeInput = document.getElementById('meeting-time');
+    const displayInput = document.getElementById('datetime-display');
+    const picker = document.querySelector('.datetime-picker');
+
+    dateInput.value = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    timeInput.value = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+    updateDateTimeDisplay();
+
+    displayInput.addEventListener('click', function(e) {
+        e.stopPropagation();
+        picker.style.display = 'block';
+    });
+
+    [dateInput, timeInput].forEach(input => {
+        input.addEventListener('change', () => {
+            updateDateTimeDisplay();
+            // 會議日期同步至會議編號的日期欄位
+            if (dateInput.value) {
+                document.getElementById('meeting-date-input').value = dateInput.value.replace(/-/g, '');
+                updateMeetingNumber();
+            }
+            picker.style.display = 'none';
+            scheduleSave();
+        });
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!displayInput.contains(e.target) && !picker.contains(e.target)) {
+            picker.style.display = 'none';
+        }
+    });
+}
+
+function updateDateTimeDisplay() {
+    const dateInput = document.getElementById('meeting-date');
+    const timeInput = document.getElementById('meeting-time');
+    const displayInput = document.getElementById('datetime-display');
+    if (dateInput.value && timeInput.value) {
+        const date = new Date(`${dateInput.value}T${timeInput.value}`);
+        displayInput.value = new Intl.DateTimeFormat('zh-TW', {
+            year: 'numeric', month: '2-digit', day: '2-digit',
+            hour: '2-digit', minute: '2-digit', hour12: false
+        }).format(date);
+    }
+}
+
+// ============ 負責人下拉選單（安全版，不使用 innerHTML 插值）============
+function updateResponsiblePersonOptions() {
+    const attendees = Array.from(tbodyOf('attendee-list').rows)
+        .map(row => {
+            const unit = row.querySelector('.unit-input')?.value || '';
+            const title = row.querySelector('.title-input')?.value || '';
+            const name = row.querySelector('.name-input')?.value || '';
+            return name ? `${name}(${unit}-${title})` : null;
+        }).filter(Boolean);
+
+    document.querySelectorAll('.responsible-person, #host, #recorder').forEach(select => {
+        const currentValue = select.value;
+        const keepStatus = select.classList.contains('status-select'); // 保險：不應發生
+        select.innerHTML = '';
+        select.appendChild(new Option('請選擇...', ''));
+        if (select.classList.contains('responsible-person')) {
+            select.appendChild(new Option('不指定', 'none'));
+        }
+        attendees.forEach(person => select.appendChild(new Option(person, person)));
+        if (currentValue && currentValue !== 'none' && currentValue !== '' && !attendees.includes(currentValue)) {
+            select.appendChild(new Option(currentValue, currentValue));
+        }
+        select.value = currentValue;
+    });
+}
+
+// ============ 新增 / 刪除列 ============
+function addRow(tableId) {
+    const tbody = tbodyOf(tableId);
+    const newRow = tbody.insertRow(-1);
+    newRow.className = 'data-row';
+    newRow.innerHTML = ROW_TEMPLATES[tableId];
+    // 新列的負責人選單需同步目前出席者
+    if (newRow.querySelector('.responsible-person')) updateResponsiblePersonOptions();
+    return newRow;
+}
+
+function deleteRow(btn) {
+    if (!confirm('確定要刪除這筆記錄嗎？')) return;
+    const row = btn.closest('tr');
+    const tbody = row.parentElement;
+    if (tbody.rows.length > 1) {
+        row.remove();
+    } else {
+        // 最後一列：清空內容而非刪除
+        row.querySelectorAll('input, textarea, select').forEach(el => {
+            if (el.type === 'checkbox') el.checked = false;
+            else el.value = '';
+        });
+    }
+    updateResponsiblePersonOptions();
+    scheduleSave();
+}
+
+// ============ 事件委派（自動儲存 / 刪除 / 拖曳）============
+function setupEventDelegation() {
+    // 輸入即儲存（debounce）
+    document.addEventListener('input', (e) => {
+        if (e.target.matches('input, textarea, select')) scheduleSave();
+        if (e.target.matches('.unit-input, .title-input, .name-input')) updateResponsiblePersonOptions();
+    });
+    document.addEventListener('change', (e) => {
+        if (e.target.matches('input, textarea, select')) scheduleSave();
+        if (e.target.matches('.unit-input, .title-input, .name-input')) updateResponsiblePersonOptions();
+    });
+
+    // 刪除按鈕
+    document.addEventListener('click', (e) => {
+        const btn = e.target.closest('.delete-btn');
+        if (btn) deleteRow(btn);
+    });
+
+    // 拖曳把手：只有按住把手時整列才可拖曳，避免干擾文字選取
+    document.addEventListener('mousedown', (e) => {
+        const handle = e.target.closest('.drag-handle');
+        if (handle) handle.closest('tr').draggable = true;
+    });
+    document.addEventListener('mouseup', () => {
+        document.querySelectorAll('tr[draggable="true"]').forEach(tr => tr.draggable = false);
+    });
+
+    document.addEventListener('dragstart', (e) => {
+        const row = e.target.closest('tr.data-row');
+        if (row && row.draggable) {
+            draggedRow = row;
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/plain', '');
+        }
+    });
+    document.addEventListener('dragover', (e) => {
+        const targetRow = e.target.closest('tr.data-row');
+        // 僅允許同一表格內排序
+        if (targetRow && draggedRow && targetRow.parentNode === draggedRow.parentNode) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            document.querySelectorAll('.dragover').forEach(el => el.classList.remove('dragover'));
+            if (targetRow !== draggedRow) targetRow.classList.add('dragover');
+        }
+    });
+    document.addEventListener('drop', (e) => {
+        const targetRow = e.target.closest('tr.data-row');
+        if (targetRow && draggedRow && draggedRow !== targetRow &&
+            targetRow.parentNode === draggedRow.parentNode) {
+            e.preventDefault();
+            const tbody = targetRow.parentNode;
+            const allRows = Array.from(tbody.rows);
+            if (allRows.indexOf(draggedRow) < allRows.indexOf(targetRow)) {
+                tbody.insertBefore(draggedRow, targetRow.nextSibling);
+            } else {
+                tbody.insertBefore(draggedRow, targetRow);
+            }
+            scheduleSave();
+        }
+    });
+    document.addEventListener('dragend', () => {
+        document.querySelectorAll('.dragover').forEach(el => el.classList.remove('dragover'));
+        document.querySelectorAll('tr[draggable="true"]').forEach(tr => tr.draggable = false);
+        draggedRow = null;
+    });
+
+    // Ctrl+P / Cmd+P 列印快捷鍵
+    document.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'p') {
+            e.preventDefault();
+            handlePrint();
+        }
+    });
+
+    // 列印前後的 DOM 置換：改掛在 beforeprint / afterprint，
+    // 即使從瀏覽器選單列印也能正確處理，且不受 window.print() 非同步影響
+    window.addEventListener('beforeprint', prepareForPrint);
+    window.addEventListener('afterprint', cleanupAfterPrint);
+}
+
+// ============ 表單驗證（收集全部錯誤）============
+function validateForm() {
+    const alertDiv = document.getElementById('validation-alert');
+    const errors = [];
+    let firstInvalid = null;
+
+    document.querySelectorAll('[required]').forEach(field => {
+        if (!field.value) {
+            errors.push(`請填寫必要欄位：${field.dataset.label || '欄位'}`);
+            if (!firstInvalid) firstInvalid = field;
+        }
+    });
+
+    if (document.querySelectorAll('[name="meeting-type"]:checked').length === 0) {
+        errors.push('請至少選擇一個會議類型');
+    }
+
+    const hasAttendee = Array.from(tbodyOf('attendee-list').rows)
+        .some(row => (row.querySelector('.name-input')?.value || '').trim() !== '');
+    if (!hasAttendee) {
+        errors.push('請至少填寫一位出席者姓名');
+    }
+
+    if (errors.length > 0) {
+        alertDiv.style.display = 'block';
+        alertDiv.innerHTML = '';
+        const title = document.createElement('div');
+        title.textContent = '無法列印，請先修正以下問題：';
+        const ul = document.createElement('ul');
+        errors.forEach(msg => {
+            const li = document.createElement('li');
+            li.textContent = msg;
+            ul.appendChild(li);
+        });
+        alertDiv.appendChild(title);
+        alertDiv.appendChild(ul);
+        if (firstInvalid) firstInvalid.focus();
+        showToast('表單尚有未完成欄位', 'error');
+        return false;
+    }
+    alertDiv.style.display = 'none';
+    return true;
+}
+
+// ============ 資料收集與填充 ============
+function collectFormData() {
+    formData.meetingInfo = {
+        title: document.getElementById('meeting-title').value,
+        number: `MM-${document.getElementById('project-code').value}-${document.getElementById('meeting-date-input').value}-${document.getElementById('department').value}-${document.getElementById('version').value}`,
+        datetime: document.getElementById('datetime-display').value,
+        location: document.getElementById('meeting-location').value,
+        types: Array.from(document.querySelectorAll('[name="meeting-type"]:checked')).map(cb => cb.value),
+        projectCode: document.getElementById('project-code').value,
+        date: document.getElementById('meeting-date-input').value,
+        department: document.getElementById('department').value,
+        version: document.getElementById('version').value
+    };
+
+    formData.participants = {
+        host: document.getElementById('host').value,
+        recorder: document.getElementById('recorder').value,
+        attendees: Array.from(tbodyOf('attendee-list').rows).map(row => ({
+            unit: row.querySelector('.unit-input')?.value || '',
+            title: row.querySelector('.title-input')?.value || '',
+            name: row.querySelector('.name-input')?.value || ''
+        }))
+    };
+
+    formData.previousItems = Array.from(tbodyOf('previous-items').rows).map(row => ({
+        item: row.querySelector('.item-input')?.value || '',
+        responsible: row.querySelector('.responsible-person')?.value || 'none',
+        status: row.querySelector('.status-select')?.value || '待辦',
+        description: row.querySelector('.desc-input')?.value || ''
+    }));
+
+    formData.discussionItems = Array.from(tbodyOf('discussion-items').rows).map(row => ({
+        topic: row.querySelector('.topic-input')?.value || '',
+        content: row.querySelector('.content-input')?.value || '',
+        conclusion: row.querySelector('.conclusion-input')?.value || '',
+        responsible: row.querySelector('.responsible-person')?.value || 'none',
+        deadline: row.querySelector('.deadline-input')?.value || '',
+        track: row.querySelector('.track-checkbox')?.checked || false
+    }));
+}
+
+function rebuildRows(tableId, count) {
+    const tbody = tbodyOf(tableId);
+    tbody.innerHTML = '';
+    for (let i = 0; i < Math.max(count, 1); i++) addRow(tableId);
+}
+
+function populateFormData() {
+    if (!formData) return;
+
+    document.getElementById('meeting-title').value = formData.meetingInfo.title || '會議記錄';
+    if (formData.meetingInfo.projectCode) document.getElementById('project-code').value = formData.meetingInfo.projectCode;
+    if (formData.meetingInfo.date) document.getElementById('meeting-date-input').value = formData.meetingInfo.date;
+    if (formData.meetingInfo.department) document.getElementById('department').value = formData.meetingInfo.department;
+    if (formData.meetingInfo.version) document.getElementById('version').value = formData.meetingInfo.version;
+    if (formData.meetingInfo.datetime) document.getElementById('datetime-display').value = formData.meetingInfo.datetime;
+    document.getElementById('meeting-location').value = formData.meetingInfo.location || '';
+
+    document.querySelectorAll('[name="meeting-type"]').forEach(cb => {
+        cb.checked = formData.meetingInfo.types?.includes(cb.value) || false;
+    });
+
+    // 出席人員
+    const attendees = formData.participants?.attendees || [];
+    rebuildRows('attendee-list', attendees.length);
+    attendees.forEach((attendee, index) => {
+        const row = tbodyOf('attendee-list').rows[index];
+        if (row) {
+            row.querySelector('.unit-input').value = attendee.unit || '';
+            row.querySelector('.title-input').value = attendee.title || '';
+            row.querySelector('.name-input').value = attendee.name || '';
+        }
+    });
+    updateResponsiblePersonOptions();
+
+    document.getElementById('host').value = formData.participants?.host || '';
+    document.getElementById('recorder').value = formData.participants?.recorder || '';
+
+    // 前次追蹤事項
+    const prev = formData.previousItems || [];
+    rebuildRows('previous-items', prev.length);
+    prev.forEach((item, index) => {
+        const row = tbodyOf('previous-items').rows[index];
+        if (row) {
+            row.querySelector('.item-input').value = item.item || '';
+            row.querySelector('.responsible-person').value = item.responsible || 'none';
+            row.querySelector('.status-select').value = item.status || '待辦';
+            row.querySelector('.desc-input').value = item.description || '';
+        }
+    });
+
+    // 本次討論事項
+    const disc = formData.discussionItems || [];
+    rebuildRows('discussion-items', disc.length);
+    disc.forEach((item, index) => {
+        const row = tbodyOf('discussion-items').rows[index];
+        if (row) {
+            row.querySelector('.topic-input').value = item.topic || '';
+            row.querySelector('.content-input').value = item.content || '';
+            row.querySelector('.conclusion-input').value = item.conclusion || '';
+            row.querySelector('.responsible-person').value = item.responsible || 'none';
+            row.querySelector('.deadline-input').value = item.deadline || '';
+            row.querySelector('.track-checkbox').checked = item.track || false;
+        }
+    });
+
+    updateResponsiblePersonOptions();
+}
+
+// ============ 匯出 / 匯入 ============
+function exportJSON() {
+    collectFormData();
+    const meetingNumber = formData.meetingInfo.number || 'meeting';
+    const date = new Date().toISOString().split('T')[0];
+    const jsonStr = JSON.stringify(formData, null, 2);
+    downloadBlob(jsonStr, 'application/json', `${meetingNumber}_${date}.json`);
+    showToast('已匯出 JSON 檔案');
+}
+
+function downloadBlob(content, mime, filename) {
+    const blob = new Blob([content], { type: mime });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+function importJSON(input) {
+    const file = input.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const parsed = JSON.parse(e.target.result.trim());
+            if (!isValidFormData(parsed)) {
+                showToast('檔案結構不符，請確認是本工具匯出的 JSON', 'error');
+                return;
+            }
+            formData = normalizeFormData(parsed);
+            populateFormData();
+            saveFormData();
+            showToast('資料匯入成功！');
+        } catch (error) {
+            showToast('檔案格式錯誤，請確認是否為有效的 JSON 檔案', 'error');
+            console.error('匯入錯誤:', error);
+        }
+    };
+    reader.onerror = function() {
+        showToast('無法讀取檔案', 'error');
+    };
+    reader.readAsText(file, 'UTF-8');
+    input.value = '';
+}
+
+function importPreviousItems(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const previousData = JSON.parse(e.target.result.trim());
+            if (!isValidFormData(previousData)) {
+                showToast('檔案結構不符，請確認是本工具匯出的 JSON', 'error');
+                return;
+            }
+
+            // 本次討論事項中勾選「列入追蹤」者
+            let itemsToTrack = [];
+            if (Array.isArray(previousData.discussionItems)) {
+                itemsToTrack = previousData.discussionItems.filter(item => item.track === true);
+            }
+
+            // 前次追蹤事項中尚未完成者
+            let unfinishedItems = [];
+            if (Array.isArray(previousData.previousItems)) {
+                unfinishedItems = previousData.previousItems.filter(item => item.status !== '已完成' && item.item);
+            }
+
+            const convertedTrackItems = itemsToTrack.map(item => ({
+                item: item.topic || '',
+                responsible: item.responsible || 'none',
+                status: '待辦',
+                description: `${item.content || ''} - 結論：${item.conclusion || ''}`
+            }));
+
+            const allTrackItems = [...unfinishedItems, ...convertedTrackItems];
+
+            if (allTrackItems.length === 0) {
+                showToast('選取的 JSON 檔案中沒有需要追蹤的事項', 'info');
+                return;
+            }
+
+            rebuildRows('previous-items', allTrackItems.length);
+            allTrackItems.forEach((item, index) => {
+                const row = tbodyOf('previous-items').rows[index];
+                if (row) {
+                    row.querySelector('.item-input').value = item.item || '';
+                    row.querySelector('.responsible-person').value = item.responsible || 'none';
+                    row.querySelector('.status-select').value = item.status || '待辦';
+                    row.querySelector('.desc-input').value = item.description || '';
+                }
+            });
+
+            updateResponsiblePersonOptions();
+            saveFormData();
+            showToast(`成功匯入 ${allTrackItems.length} 項追蹤事項\n（未完成 ${unfinishedItems.length} 項＋需追蹤討論 ${convertedTrackItems.length} 項）`);
+        } catch (error) {
+            showToast('檔案解析失敗，請確認檔案是否為有效的 JSON 格式', 'error');
+            console.error('解析錯誤詳情:', error);
+        }
+    };
+    reader.onerror = function() {
+        showToast('無法讀取檔案', 'error');
+    };
+    reader.readAsText(file, 'UTF-8');
+    input.value = '';
+}
+
+// Markdown 特殊字元跳脫（避免 | 與換行破壞表格）
+function mdEsc(s) {
+    return String(s ?? '').replace(/\|/g, '\\|').replace(/\r?\n/g, '<br>');
+}
+
+function exportMarkdown() {
+    collectFormData();
+    let mdContent = `# ${formData.meetingInfo.title || '會議記錄'}\n\n`;
+
+    mdContent += `## 會議資訊\n`;
+    mdContent += `- **會議編號**：${formData.meetingInfo.number || ''}\n`;
+    mdContent += `- **日期時間**：${formData.meetingInfo.datetime || ''}\n`;
+    mdContent += `- **地點**：${formData.meetingInfo.location || ''}\n`;
+    mdContent += `- **會議類型**：${formData.meetingInfo.types.length > 0 ? formData.meetingInfo.types.join('、') : '無'}\n\n`;
+
+    mdContent += `## 出席人員\n`;
+    mdContent += `- **主持人**：${formData.participants.host || ''}\n`;
+    mdContent += `- **記錄者**：${formData.participants.recorder || ''}\n\n`;
+
+    if (formData.participants.attendees.filter(a => a.name).length > 0) {
+        mdContent += `| 單位 | 職稱 | 姓名 |\n|------|------|------|\n`;
+        formData.participants.attendees.forEach(attendee => {
+            if (attendee.name) {
+                mdContent += `| ${mdEsc(attendee.unit)} | ${mdEsc(attendee.title)} | ${mdEsc(attendee.name)} |\n`;
+            }
+        });
+        mdContent += `\n`;
+    }
+
+    mdContent += `## 前次追蹤事項\n`;
+    if (formData.previousItems.some(item => item.item)) {
+        mdContent += `| 項目 | 負責人 | 狀態 | 說明 |\n|------|--------|------|------|\n`;
+        formData.previousItems.forEach(item => {
+            if (item.item) {
+                mdContent += `| ${mdEsc(item.item)} | ${item.responsible === 'none' ? '不指定' : mdEsc(item.responsible)} | ${mdEsc(item.status)} | ${mdEsc(item.description)} |\n`;
+            }
+        });
+        mdContent += `\n`;
+    } else {
+        mdContent += `無前次追蹤事項。\n\n`;
+    }
+
+    mdContent += `## 本次討論事項\n`;
+    if (formData.discussionItems.some(item => item.topic)) {
+        mdContent += `| 主題 | 討論內容 | 結論 | 負責人 | 期限 | 列入追蹤 |\n|------|----------|------|--------|------|----------|\n`;
+        formData.discussionItems.forEach(item => {
+            if (item.topic) {
+                mdContent += `| ${mdEsc(item.topic)} | ${mdEsc(item.content)} | ${mdEsc(item.conclusion)} | ${item.responsible === 'none' ? '不指定' : mdEsc(item.responsible)} | ${mdEsc(item.deadline)} | ${item.track ? '✓' : ''} |\n`;
+            }
+        });
+    } else {
+        mdContent += `無本次討論事項。\n`;
+    }
+
+    const meetingNumber = formData.meetingInfo.number || 'meeting';
+    const date = new Date().toISOString().split('T')[0];
+    downloadBlob(mdContent, 'text/markdown', `${meetingNumber}_${date}.md`);
+    showToast('已匯出 Markdown 檔案');
+}
+
+// ============ 列印 ============
+let printPrepared = false;
+
+function handlePrint() {
+    if (validateForm()) {
+        window.print(); // DOM 置換交由 beforeprint / afterprint 處理
+    }
+}
+
+function prepareForPrint() {
+    if (printPrepared) return;
+    printPrepared = true;
+
+    // 將輸入框與選單置換為純文字（避免 textarea 長內容被裁切）
+    document.querySelectorAll(
+        'input[type="text"]:not(.datetime-picker input), textarea.form-control, select, td input[type="date"].deadline-input'
+    ).forEach(input => {
+        if (input.closest('.datetime-picker')) return;
+        const displayDiv = document.createElement('div');
+        displayDiv.className = 'print-text';
+        if (input.tagName === 'SELECT') {
+            displayDiv.textContent = input.options[input.selectedIndex]?.text || '';
+        } else {
+            displayDiv.textContent = input.value || '';
+        }
+        input.parentNode.insertBefore(displayDiv, input);
+        input.dataset.printHidden = '1';
+        input.style.display = 'none';
+    });
+
+    // 勾選框顯示為文字
+    document.querySelectorAll('.track-checkbox').forEach(checkbox => {
+        const displayDiv = document.createElement('div');
+        displayDiv.className = 'print-checkbox print-text';
+        displayDiv.textContent = checkbox.checked ? '✓' : '';
+        displayDiv.style.cssText = 'text-align: center; font-size: 14pt; font-weight: bold;';
+        checkbox.parentNode.insertBefore(displayDiv, checkbox);
+        checkbox.dataset.printHidden = '1';
+        checkbox.style.display = 'none';
+    });
+}
+
+function cleanupAfterPrint() {
+    if (!printPrepared) return;
+    printPrepared = false;
+    document.querySelectorAll('.print-text, .print-checkbox').forEach(el => el.remove());
+    document.querySelectorAll('[data-print-hidden]').forEach(input => {
+        input.style.display = '';
+        delete input.dataset.printHidden;
+    });
+}
+
+// ============ 清除表單 ============
+function clearForm() {
+    if (confirm('確定要清除所有資料嗎？此操作無法復原。')) {
+        localStorage.removeItem('meetingFormData');
+        // 版次遞增交由重新載入後的 initMeetingNumber 處理，避免重複 +1
+        location.reload();
+    }
+}
+</script>
+</body>
+</html>
